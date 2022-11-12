@@ -2,7 +2,7 @@
     <el-card class="box-card">
         <template #header>
             <div class="card-header">
-                <h2>✨ 音乐网站 ✨</h2>
+                <h2>✨ Music Web ✨</h2>
             </div>
         </template>
 
