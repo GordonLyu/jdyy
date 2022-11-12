@@ -1,5 +1,5 @@
 <template>
-  <el-page-header :back="router.back()" :icon="ArrowLeft">
+  <el-page-header :back="router.back" :icon="ArrowLeft">
     <template #content>
       <span class="text-large font-600 mr-3"> Title </span>
     </template>
@@ -41,5 +41,9 @@ import Avatar from "./Avatar.vue";
 .el-dropdown-link {
   display: flex;
   align-items: center;
+  gap: 2rem;
+}
+.el-icon--right{
+  margin-right: 1rem;
 }
 </style>
