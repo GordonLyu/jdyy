@@ -72,7 +72,8 @@
 
                 <!-- 注册按钮 -->
                 <el-form-item>
-                    <el-button color="#1890ff" style="color: white" class="register-button" @click="submitForm(ruleFormRef)">
+                    <el-button color="#1890ff" style="color: white" class="register-button"
+                        @click="submitForm(ruleFormRef)">
                         注册
                     </el-button>
                     <p id="signup-hint">
@@ -90,6 +91,9 @@ import type { FormInstance } from 'element-plus'
 import card from "@/components/card/card.vue";
 import { User, Lock } from "@element-plus/icons-vue";
 import { ElMessage } from "element-plus";
+import { doRegister } from '@/api/register';
+import qs from "qs";
+
 
 const ruleFormRef = ref<FormInstance>()
 
@@ -115,8 +119,21 @@ const rules = reactive({
 const submitForm = (formEl: FormInstance | undefined) => {
     if (!formEl) return
     formEl.validate((valid) => {
+
+
         if (valid) {
-            
+            doRegister(qs.stringify(ruleForm)).then(res => {
+                console.log(res, ruleForm);
+                if (res.code === 200) {
+                    ElMessage.error("注册成功！！！")
+                } else if (ruleForm.password !== ruleForm.ensurePassword) {
+                    ElMessage.error("第一次与第二次输入的密码不一致")
+                    return false;
+                } else {
+                    ElMessage.error("密码长度必须在6-20之间")
+                    return false;
+                }
+            })
 
 
         } else {
@@ -143,6 +160,7 @@ const submitForm = (formEl: FormInstance | undefined) => {
 #signup-hint a:hover {
     text-decoration: underline;
 }
+
 .Register {
     background-image: url(@/assets/image/login-background.jpg);
     height: 100vh;
@@ -150,6 +168,7 @@ const submitForm = (formEl: FormInstance | undefined) => {
     justify-content: center;
     align-items: center;
 }
+
 /* 注册按钮 */
 .register-button {
     width: 100%;

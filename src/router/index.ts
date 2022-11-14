@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import BackstageView from '@/views/backstage/Backstage.vue'
 import Users from '@/views/backstage/components/Main/Users.vue'
 import adminLogin from '@/views/login/Login.vue'
-import adminRegister from '@/views/register/Register.vue'
+import Register from '@/views/register/Register.vue'
 import card from '@/components/card/card.vue'
 
 const router = createRouter({
@@ -34,8 +34,8 @@ const router = createRouter({
     },
     {
       path:'/register',
-      name:'adminRegister',
-      component:adminRegister,
+      name:'Register',
+      component:Register,
     },
     {
       path:'/card',
