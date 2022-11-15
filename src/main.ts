@@ -17,5 +17,4 @@ app.use(createPinia())
     .use(router)
     .use(vueAxios,axios,Qs)
     .use(ElementPlus)
-
 app.mount('#app')

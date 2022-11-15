@@ -56,6 +56,8 @@ import { User, Lock } from "@element-plus/icons-vue";
 import { ElMessage } from "element-plus";
 import { doLogin } from '@/api/login';
 import qs from "qs";
+
+
 const ruleFormRef = ref<FormInstance>()
 
 const ruleForm = reactive({
@@ -85,6 +87,8 @@ const submitForm = (formEl: FormInstance | undefined) => {
             console.log(res.code);
             if(res.code===200){
                 ElMessage.success("登录成功")
+                
+
             }else if(res.code===404){
                 ElMessage.error("用户不存在")
             }else{

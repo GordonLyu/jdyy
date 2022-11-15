@@ -4,7 +4,7 @@
             <el-form ref="ruleFormRef" :model="ruleForm" :rules="rules" label-width="0px" class="demo-ruleForm">
                 <!-- 用户名 -->
                 <el-form-item prop="userName">
-                    <el-input v-model="ruleForm.userName" class="w-50 m-3" size="large" placeholder="用户名">
+                    <el-input v-model="ruleForm.username" class="w-50 m-3" size="large" placeholder="用户名">
                         <template #prefix>
                             <el-icon class="el-input__icon">
                                 <User />
@@ -92,19 +92,18 @@ import card from "@/components/card/card.vue";
 import { User, Lock } from "@element-plus/icons-vue";
 import { ElMessage } from "element-plus";
 import { doRegister } from '@/api/register';
-import qs from "qs";
 
 
 const ruleFormRef = ref<FormInstance>()
 
 const ruleForm = reactive({
-    userName: '',
+    username: '',
     password: '',
     ensurePassword: ''
 })
 
 const rules = reactive({
-    userName: [
+    username: [
         {
             required: true,
             message: "用户名不能为空",
@@ -122,15 +121,15 @@ const submitForm = (formEl: FormInstance | undefined) => {
 
 
         if (valid) {
-            doRegister(qs.stringify(ruleForm)).then(res => {
+            doRegister(JSON.stringify(ruleForm)).then(res => {
                 console.log(res, ruleForm);
                 if (res.code === 200) {
-                    ElMessage.error("注册成功！！！")
+                    ElMessage.success("注册成功！！！")
                 } else if (ruleForm.password !== ruleForm.ensurePassword) {
                     ElMessage.error("第一次与第二次输入的密码不一致")
                     return false;
                 } else {
-                    ElMessage.error("密码长度必须在6-20之间")
+                    ElMessage.error(res.message)
                     return false;
                 }
             })
