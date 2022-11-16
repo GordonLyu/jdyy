@@ -6,6 +6,11 @@ import { RouterView } from 'vue-router'
   <RouterView/>
 </template>
 
-<style scoped>
+<style>
+@import url(https://fonts.googleapis.com/css?family=Kanit:900);
+@import url(https://fonts.googleapis.com/css?family=Long+Cang&display=swap);
+
+
+
 
 </style>

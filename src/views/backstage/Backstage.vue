@@ -4,7 +4,7 @@
       <el-aside width="auto" class="menu"><Menu></Menu></el-aside>
       <el-container>
         <el-header height="80px" class="header"><Header></Header></el-header>
-        <el-main><RouterView/></el-main>
+        <el-main><RouterView></RouterView></el-main>
         <el-footer><Footer></Footer></el-footer>
       </el-container>
     </el-container>
