@@ -83,7 +83,7 @@ const submitForm = (formEl: FormInstance | undefined) => {
         if (valid) {
             console.log(ruleForm);
             
-           doLogin(qs.stringify(ruleForm)).then(res=>{
+           doLogin(JSON.stringify(ruleForm)).then(res=>{
             console.log(res.code);
             if(res.code===200){
                 ElMessage.success("登录成功")
