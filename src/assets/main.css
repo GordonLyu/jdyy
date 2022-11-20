@@ -41,5 +41,80 @@ html{
   height: 100%;
 }
 body{
+  min-width: 450px;
+}
+
+
+
+/* 以下是自定css，可通过类名直接用 */
+/* 滚动条样式 */
+.a-scroll::-webkit-scrollbar{
+  width: 5px;
   height: 100%;
+  background-color: rgb(235, 235, 235);
+}
+.a-scroll::-webkit-scrollbar-thumb{
+  border-radius: 5px;
+	box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+	background: rgba(0,0,0,0.2);
+}
+
+/* 动画 */
+
+/* 淡入 */
+@keyframes fade-in{
+  0%{
+    opacity: 0;
+  }
+  100%{
+    opacity: 1;
+  }
+}
+
+/* 左淡入 */
+@keyframes left-fade-in{
+  0%{
+    opacity: 0;
+    left: 50px;
+  }
+  100%{
+    opacity: 1;
+    left: 0;
+  }
+}
+
+/* 右淡入 */
+@keyframes right-fade-in{
+  0%{
+    opacity: 0;
+    right: 50px;
+  }
+  100%{
+    opacity: 1;
+    right: 0;
+  }
+}
+
+/* 上淡入 */
+@keyframes up-fade-in{
+  0%{
+    opacity: 0;
+    top: -50px;
+  }
+  100%{
+    opacity: 1;
+    top: 0;
+  }
+}
+
+/* 下淡入 */
+@keyframes down-fade-in{
+  0%{
+    opacity: 0;
+    bottom: 50px;
+  }
+  100%{
+    opacity: 1;
+    bottom: 0;
+  }
 }

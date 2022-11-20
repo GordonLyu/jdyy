@@ -1,6 +1,6 @@
 <template>
   <div class="block">
-    <el-avatar :size="50" :src="circleUrl" />
+    <el-avatar :size="45" :src="circleUrl" />
   </div>
 </template>
 <script lang="ts" setup>

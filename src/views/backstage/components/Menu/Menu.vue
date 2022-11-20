@@ -19,11 +19,15 @@
           <el-menu-item index="1-1">分析表</el-menu-item>
         </el-menu-item-group>
       </el-sub-menu>
-      <el-menu-item index="2">
+      <el-menu-item index="2" @click="to('users')">
         <el-icon><icon-menu /></el-icon>
-        <template #title>用户表</template>
+        <template #title>用户管理</template>
       </el-menu-item>
-      <el-menu-item index="3">
+      <el-menu-item index="3" @click="to('music')">
+        <el-icon><icon-menu /></el-icon>
+        <template #title>音乐管理</template>
+      </el-menu-item>
+      <el-menu-item index="4">
         <el-icon><setting /></el-icon>
         <template #title>设置</template>
       </el-menu-item>
@@ -37,6 +41,8 @@
     Location,
     Setting,
   } from '@element-plus/icons-vue'
+  import router from '@/router/index'
+
   
   const isCollapse = ref(false)
   const handleOpen = (key: string, keyPath: string[]) => {
@@ -45,6 +51,11 @@
   const handleClose = (key: string, keyPath: string[]) => {
     console.log(key, keyPath)
   }
+
+  function to(url:string){
+    router.push(url);
+  }
+
 
   //当窗口小于700时隐藏文本
   isCollapse.value =  window.innerWidth<700?true:false;
@@ -57,7 +68,6 @@
 
   .main:not(.el-menu--collapse) {
     width: 200px;
-    height: 100%;
   }
   .el-menu{
     border: none;

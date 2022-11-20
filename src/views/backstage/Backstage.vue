@@ -1,14 +1,12 @@
 <template>
-  <div class="common-layout">
-    <el-container>
-      <el-aside width="auto" class="menu"><Menu></Menu></el-aside>
+  <el-container>
+      <el-aside width="auto"><Menu></Menu></el-aside>
       <el-container>
-        <el-header height="80px" class="header"><Header></Header></el-header>
-        <el-main><RouterView></RouterView></el-main>
-        <el-footer><Footer></Footer></el-footer>
+        <el-header height="80px"><Header></Header></el-header>
+        <el-main class="a-scroll"><RouterView></RouterView></el-main>
+        <el-footer height="75px"><Footer></Footer></el-footer>
       </el-container>
     </el-container>
-  </div>
 </template>
 
 <script setup lang="ts">
@@ -24,17 +22,40 @@ var headerHight = "80px";
 #app {
   height: 100%;
 }
-.menu{
+body{
+  height: 100%;
+}
+
+body::-webkit-scrollbar{
+  width: 5px;
+  height: 100%;
+  background-color: rgb(235, 235, 235);
+}
+body::-webkit-scrollbar-thumb{
+  border-radius: 5px;
+	box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+	background: rgba(0,0,0,0.2);
+}
+.el-aside{
   display: flex;
   flex-direction: column;
-  height: 100vh;
 }
-header.header{
+.el-header{
   padding: 0;
   display: flex;
   align-items: center;
   padding-left: 20px;
   padding-right: 20px;
   justify-content: space-between;
+}
+main.el-main{
+  height: 100%;
+  min-height: 120px;
+  padding: 0;
+  overflow: auto;
+}
+
+.el-container{
+  height: 100%;
 }
 </style>

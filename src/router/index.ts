@@ -4,6 +4,7 @@ import Users from '@/views/backstage/components/Main/Users.vue'
 import adminLogin from '@/views/login/Login.vue'
 import Register from '@/views/register/Register.vue'
 import card from '@/components/card/card.vue'
+import Music from '@/views/backstage/components/Main/Music.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -23,6 +24,14 @@ const router = createRouter({
             title:"后台管理系统--用户表"
           },
           component: Users
+        },
+        {
+          path: '/music',
+          name: 'music',
+          meta:{
+            title:"后台管理系统--音乐表"
+          },
+          component: Music
         },
 
       ]
