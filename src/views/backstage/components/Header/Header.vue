@@ -26,9 +26,8 @@
 
 <script setup lang="ts">
 import router from "@/router";
-import { ArrowDown } from "@element-plus/icons-vue";
 import { ArrowLeft } from "@element-plus/icons-vue";
-import Avatar from "./Avatar.vue";
+import Avatar from "@/components/Avatar.vue";
 </script>
 
 <style scoped>
