@@ -3,14 +3,16 @@ import BackstageView from '@/views/backstage/Backstage.vue'
 import Users from '@/views/backstage/components/Main/Users.vue'
 import adminLogin from '@/views/login/Login.vue'
 import Register from '@/views/register/Register.vue'
-import card from '@/components/card/card.vue'
 import Music from '@/views/backstage/components/Main/Music.vue'
+import musicFrout from '@/views/fronts/musicFrout.vue'
+import musicPlay from '@/views/fronts/musicPlay/musicPlay.vue'
+import musicLIst from '@/views/fronts/musicList/musicLIst.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: '/',
+      path: '/admin',
       name: 'backstage',
       meta:{
         title:"后台管理系统"
@@ -37,6 +39,21 @@ const router = createRouter({
       ]
     },
     {
+      path:'/musicFrout',
+      name:'musicFrout',
+      component:musicFrout,
+      children:[
+        {
+          path:'/musicFrout/musicList/:id',
+          component: musicLIst
+        },
+        {
+          path:'/musicFrout/musicPlay/:id',
+          component:musicPlay
+        },
+      ]
+    },
+    {
       path:'/login',
       name:'adminLogin',
       component:adminLogin,
@@ -47,10 +64,9 @@ const router = createRouter({
       component:Register,
     },
     {
-      path:'/card',
-      name:'card',
-      component:card,
-    },
+      path:'',
+      redirect:'/musicFrout'
+    }
   ]
 })
 
