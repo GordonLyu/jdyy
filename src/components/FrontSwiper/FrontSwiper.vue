@@ -53,9 +53,11 @@
 	object-fit: cover;
 }
 .swiper-button-next{
+	background-color: var(--color-white) !important;
 	right: 0px;
 }
 .swiper-button-prev{
+	background-color: var(--color-white) !important;
 	left: 0px;
 }
 
