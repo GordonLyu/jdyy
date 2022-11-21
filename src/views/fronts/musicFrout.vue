@@ -67,7 +67,7 @@ let ListData=[
         {
             id:1,//歌单id
             title:'我的世界',//歌单名称
-            cover:'/public/image/nav2.jpg',//歌单封面路径
+            cover:'/public/image/nav3.jpg',//歌单封面路径
             creator:'cuanzi',//创建者
             createTime:"2003-05-28",
             copywriting:'hhhhhhhhhhhh',//文案

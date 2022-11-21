@@ -278,37 +278,48 @@ firstitem.push(props.listMusic[0]);
     padding-bottom: 4rem;
 }
 /* 精选歌单的大封面盒子 */
-#seation div .musicSheetList .box div:nth-of-type(1){
+#seation div .musicSheetList .box>div:nth-of-type(1){
    width: 95%;
    height:28rem ;
    /* border: 1px solid; */
    display: flex;
    justify-content: center;
    align-items: center;
-   /* border-radius: 10px; */
-   box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, 
-    rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+   border-radius: 10px;
+   box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
     /* 优化高斯模糊 */
     transform: translateZ(0);
+    background-color: #2f6ed3;
     position: relative;
 }
 /* 精选歌单的大封面 */
 #seation div .musicSheetList .box>div:nth-of-type(1)>img{
-    width: 50%;
-    height: 100%;
+    width: 30%;
+    aspect-ratio: 1/1;
+    margin: 0 10%;
+    /* height: 100%; */
+    border-radius: 50%;
     /* background-color: aliceblue; */
     object-fit: cover;
     /* border-radius:10px 0 0 10px;  */
+    animation: rot 10s linear infinite;
+} 
+@keyframes rot{
+    from{
+        transform: rotate(360deg);
+    }
+    to{
+        transform: rotate(0deg);
+    }
 }
-
 /* 精选歌单的简介以及歌单名的盒子*/
 #seation div .musicSheetList .box>div:nth-of-type(1)>div{
     width: 50%;
     height: 100%;
-    /* background-color: white; */
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    justify-content: center;
     /* border-radius:0 10px 10px 0;  */
     cursor: pointer;
 }
