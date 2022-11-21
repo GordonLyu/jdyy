@@ -10,7 +10,7 @@
             <span style="margin-left: .5rem;">cuanzi</span>
             <span> | </span>
             <button>
-                <router-link to="/register">登录</router-link>
+                <router-link to="/login">登录</router-link>
             </button>
 
         </div>

@@ -1,55 +1,31 @@
 <template>
     <div id="seation">
         <!-- 背景图 -->
-        <img src="https://hype4.academy/_next/static/media/ovalShadow.793e2be7.svg" alt="">
-        <img src="https://hype4.academy/_next/static/media/ovalShadow.793e2be7.svg" alt="">
-        <img src="https://hype4.academy/_next/static/media/ovalShadow.793e2be7.svg" alt="">
-        <img src="https://hype4.academy/_next/static/media/ovalShadow.793e2be7.svg" alt="">
+        <img src="https://hype4.academy/_next/static/media/ovalShadow.793e2be7.svg" alt="图片迷路了~" style="--x:0">
+        <img src="https://hype4.academy/_next/static/media/ovalShadow.793e2be7.svg" alt="图片迷路了~" style="--x:1">
+        <img src="https://hype4.academy/_next/static/media/ovalShadow.793e2be7.svg" alt="图片迷路了~" style="--x:2">
+        <img src="https://hype4.academy/_next/static/media/ovalShadow.793e2be7.svg" alt="图片迷路了~" style="--x:3">
+        <img src="https://hype4.academy/_next/static/media/ovalShadow.793e2be7.svg" alt="图片迷路了~" style="--x:3">
 
         <div>
             <div class="musicSheetList">
                 <h1>精选歌单</h1>
                 <div class="box">
-                    <div>
-                        <img src="@/assets/image/nav2.jpg" alt="">
-                        <p>ddddddddddddddddddddddddddd</p>
+                    <div v-for="item in firstitem" :key="item.id">
+                        <img :src=item.cover alt="">
+                        <div>
+                            <p class="fa-user-plus" style="font-weight: lighter;">&nbsp;{{item.creator}}</p>
+                            <p>{{item.title}}</p>
+                            <p>{{item.copywriting}}</p>
+                        </div>
+                        
                     </div>
-                    <div>
-                        <img src="@/assets/image/nav2.jpg" alt="">
-                        <p>ddddddddddddddddddddddddddd</p>
+                    <div  v-for="item in listMusic" :key="item.id">
+                        <strong class="fa-user-plus" style="font-weight: lighter;">&nbsp;{{item.creator}}</strong>
+                        <img :src=item.cover alt="">
+                        <p><icon class="fa-music"></icon>&nbsp; {{item.title}}</p>
                     </div>
-                    <div>
-                        <img src="@/assets/image/nav2.jpg" alt="">
-                        <p>ddddddddddddddddddddddddddd</p>
-                    </div>
-                    <div>
-                        <img src="@/assets/image/nav2.jpg" alt="">
-                        <p>ddddddddddddddddddddddddddd</p>
-                    </div>
-                    <div>
-                        <img src="@/assets/image/nav2.jpg" alt="">
-                        <p>ddddddddddddddddddddddddddd</p>
-                    </div>
-                    <div>
-                        <img src="@/assets/image/nav2.jpg" alt="">
-                        <p>ddddddddddddddddddddddddddd</p>
-                    </div>
-                    <div>
-                        <img src="@/assets/image/nav2.jpg" alt="">
-                        <p>ddddddddddddddddddddddddddd</p>
-                    </div>
-                    <div>
-                        <img src="@/assets/image/nav2.jpg" alt="">
-                        <p>ddddddddddddddddddddddddddd</p>
-                    </div>
-                    <div>
-                        <img src="@/assets/image/nav2.jpg" alt="">
-                        <p>ddddddddddddddddddddddddddd</p>
-                    </div>
-                    <div>
-                        <img src="@/assets/image/nav2.jpg" alt="">
-                        <p>ddddddddddddddddddddddddddd</p>
-                    </div>
+                    
                 </div>
 
 
@@ -59,12 +35,12 @@
             <div class="RankingList">
                 <h1>热门榜单</h1>
                 <div class="item" v-for="item in dataList" :key="item.id">
-                    <div class="rank">{{ item.rank }}</div>
+                    <div class="rank">{{ item.id }}</div>
                     <div class="picture">
                         <img :src=item.url>
                     </div>
                     <div class="author">
-                        <span>{{ item.name }}</span><span> - {{ item.author }}</span>
+                        <span>{{ item.name }}</span><span>&nbsp;- {{ item.author }}</span>
                     </div>
                     <div class="clickNum">
                         点击数：<span>{{ item.clickNum }}</span>
@@ -81,9 +57,14 @@
 </template>
 
 <script setup lang="ts">
-defineProps<{
-    dataList: any[]
+const props = defineProps<{
+    dataList:any[],
+    listMusic:any[]
 }>()
+
+//大封面的数据
+let firstitem:any=[];
+firstitem.push(props.listMusic[0]);
 </script>
 
 <style scoped>
@@ -103,14 +84,28 @@ defineProps<{
     display: flex;
 }
 
+
+/* 背景圆动画 */
+ 
+@keyframes animate {
+    0%, 100%{
+        transform: translateY(-50px);
+    }
+    50% {
+        transform: translateY(50px);
+    }
+}
+/* 背景圆*/
 #seation>img {
     position: absolute;
+    animation: animate 10s linear infinite;
+    animation-delay: calc(var(--x) * -10s);
 }
 
 #seation>img:nth-of-type(1) {
     width: 15%;
-    /* top: -30%; */
-    left: 50%;
+    top: 10%;
+    left: 55%;
 
 }
 
@@ -131,7 +126,13 @@ defineProps<{
 #seation>img:nth-of-type(4) {
     width: 30%;
     top: 50%;
-    left: 60%;
+    left: 57%;
+
+}
+#seation>img:nth-of-type(5) {
+    width: 15%;
+    top: 60%;
+    left: 25%;
 
 }
 
@@ -170,7 +171,8 @@ defineProps<{
     margin-top: 20px;
     display: flex;
     background: rgba(255, 255, 255, 0.15);
-    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, 
+    rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
     /* backdrop-filter: blur(1px);
     -webkit-backdrop-filter: blur(1px); */
     border-radius: 10px;
@@ -205,6 +207,7 @@ defineProps<{
 #seation div .RankingList .item .picture img {
     width: 100%;
     cursor: pointer;
+    border-radius: 50%;
 }
 
 #seation div .RankingList .item .author {
@@ -269,34 +272,118 @@ defineProps<{
 #seation div .musicSheetList .box {
     width: 100%;
     display: flex;
-    justify-content:center;
+    justify-content:space-around;
     flex-wrap: wrap;
     margin-top: 20px;
+    padding-bottom: 4rem;
 }
 /* 精选歌单的大封面盒子 */
 #seation div .musicSheetList .box div:nth-of-type(1){
    width: 95%;
    height:28rem ;
-   border: 1px solid;
+   /* border: 1px solid; */
    display: flex;
    justify-content: center;
    align-items: center;
+   /* border-radius: 10px; */
+   box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, 
+    rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+    /* 优化高斯模糊 */
+    transform: translateZ(0);
+    position: relative;
 }
 /* 精选歌单的大封面 */
-#seation div .musicSheetList .box div:nth-of-type(1) img{
-    width: 28rem;
+#seation div .musicSheetList .box>div:nth-of-type(1)>img{
+    width: 50%;
+    height: 100%;
+    /* background-color: aliceblue; */
+    object-fit: cover;
+    /* border-radius:10px 0 0 10px;  */
 }
-#seation div .musicSheetList .box div:nth-of-type(1) p{
-    width: 90%;
-    text-align: left;
+
+/* 精选歌单的简介以及歌单名的盒子*/
+#seation div .musicSheetList .box>div:nth-of-type(1)>div{
+    width: 50%;
+    height: 100%;
+    /* background-color: white; */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    /* border-radius:0 10px 10px 0;  */
+    cursor: pointer;
 }
+#seation div .musicSheetList .box>div:nth-of-type(1)>div p:nth-of-type(2),
+#seation div .musicSheetList .box>div:nth-of-type(1)>div p:nth-of-type(3){
+    min-width:20rem;
+    height: 5rem;
+    /* border: 1px solid; */
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-left: 1vw;
+    font-size:3vw;
+    color: var(--color-white);
+    font-weight: 900;
+}
+#seation div .musicSheetList .box>div:nth-of-type(1)>div p:nth-of-type(3){
+    height: 3rem;
+    font-size:1vw;
+}
+/* 精选歌单的创建者 */
+#seation div .musicSheetList .box>div:nth-of-type(1)>div p:nth-of-type(1){
+    position: absolute;
+    width: 5rem;
+    height: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--color-white);
+    top: 0px;
+    left: -100.4%;
+    /* border-radius:10px 0 0 0; */
+    /* border: 1px solid; */
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, 
+    rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+    font-family:FontAwesome ;
+}
+/* 小歌单 */
 #seation div .musicSheetList .box div:nth-of-type(n+2){
     width: auto;
     height: 14rem;
-    border: 1px solid;
+    /* border: 1px solid; */
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, 
+    rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+    margin-top: 4rem;
+    position: relative;
+    font-family:FontAwesome ;
+    cursor: pointer;
+}
+#seation div .musicSheetList .box div:nth-of-type(n+2) strong{
+    width: 5rem;
+    height: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--color-white);
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, 
+    rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+    position: absolute;
+
 }
 #seation div .musicSheetList .box div:nth-of-type(n+2) img{
    width: auto;
    height: 14rem;
+   object-fit: cover;
+}
+#seation div .musicSheetList .box div:nth-of-type(n+2) p{
+    width: 100%;
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    padding-left:.5rem ;
+    font-size: 12px;
+    box-shadow: rgba(221, 221, 228, 0.25) 0px 2px 5px -1px, 
+    rgba(28, 25, 25, 0.3) 0px 1px 3px -1px;
+    color: var(--color-white);
 }
 </style>

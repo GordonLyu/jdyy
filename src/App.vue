@@ -10,6 +10,7 @@ import { RouterView } from 'vue-router'
 @import url(https://fonts.googleapis.com/css?family=Kanit:900);
 @import url(https://fonts.googleapis.com/css?family=Long+Cang&display=swap);
 
+
 :root{
   --color-theme-light:#rgb(148, 200, 227);
   --color-theme:#61b4e0;

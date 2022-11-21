@@ -33,6 +33,7 @@ a,
     padding: 0 2rem;
   }
 } */
+@import url(https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css);
 *{
   padding: 0;
   margin: 0;
@@ -40,7 +41,7 @@ a,
   transition: all .4s linear;
 }
 html{
-  height: 100%;
+  height: 100% !important;
 }
 body{
   min-width: 450px;
