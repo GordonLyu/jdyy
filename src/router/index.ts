@@ -3,6 +3,7 @@ import BackstageView from '@/views/backstage/Backstage.vue'
 import Users from '@/views/backstage/components/Main/Users.vue'
 import adminLogin from '@/views/login/Login.vue'
 import Register from '@/views/register/Register.vue'
+import Music from '@/views/backstage/components/Main/Music.vue'
 import musicFrout from '@/views/fronts/musicFrout.vue'
 import musicPlay from '@/views/fronts/musicPlay/musicPlay.vue'
 import musicLIst from '@/views/fronts/musicList/musicLIst.vue'
@@ -25,6 +26,14 @@ const router = createRouter({
             title:"后台管理系统--用户表"
           },
           component: Users
+        },
+        {
+          path: '/music',
+          name: 'music',
+          meta:{
+            title:"后台管理系统--音乐表"
+          },
+          component: Music
         },
 
       ]

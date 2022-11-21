@@ -1,17 +1,18 @@
 <template>
   <div class="main">
-    <el-table :data="tableData" table-layout="fixed" row-key="uid">
-      <el-table-column prop="uid" label="uid" />
-      <el-table-column prop="username" label="用户名" />
-      <el-table-column prop="password" label="密码" />
-      <el-table-column prop="role" label="角色" />
+    <el-table :data="tableData" table-layout="fixed" row-key="musicId">
+      <el-table-column prop="musicId" label="音乐id" />
+      <el-table-column prop="musicName" label="音乐名" />
+      <el-table-column prop="coverURL" label="音乐封面地址" />
+      <el-table-column prop="url" label="音乐资源地址" />
+      <el-table-column prop="author" label="作者" />
       <el-table-column fixed="right" label="操作" width="140">
         <template #default="scope">
           <el-button size="small" link type="primary"> 编辑 </el-button>
           <el-button
             size="small"
             type="danger"
-            @click.prevent="removeUser(scope)"
+            @click.prevent="removeMusic(scope)"
           >
             删除
           </el-button>
@@ -20,7 +21,7 @@
     </el-table>
     <Pagination
       class="pagination"
-      :url="'user/getPage'"
+      :url="'music/getPage'"
       @get-current-page-data="getCurrentPageData"
     />
   </div>
@@ -36,34 +37,33 @@ const currentPage = ref(0);
 const pageSize = ref(0);
 
 function getCurrentPageData(data: any) {
+  tableData.splice(0, tableData.length);
   currentPage.value = data.currentPage;
   pageSize.value = data.pageSize;
-  console.log(currentPage.value, pageSize.value);
-
-  tableData.splice(0, tableData.length);
+  console.log(data);
   data.list.forEach((value: never) => {
     tableData.push(value);
   });
 }
 
-//编辑用户
+//编辑音乐
 function modifyUser() {}
 
-//删除用户
-function removeUser(scope: any) {
-  console.log(scope.$index, scope.row.uid);
+//删除音乐
+function removeMusic(scope: any) {
+  console.log(scope.$index, scope.row.musicId);
   // tableData.splice(scope.$index, 1);
   request({
     method: "post",
-    url: "user/remove",
+    url: "music/remove",
     params: {
-      uid: scope.row.uid,
+      musicId: scope.row.musicId,
     },
   }).then((res) => {
     //删除后重新获取数据
     request({
       method: "get",
-      url: "user/getPage",
+      url: "music/getPage",
       params: {
         pageNum: currentPage.value,
         pageSize: pageSize.value,
@@ -91,7 +91,7 @@ function removeUser(scope: any) {
   justify-content: center;
 }
 .el-table {
-  animation: left-fade-in 0.3s;
+  animation: up-fade-in 0.3s;
   transition: 0.3s;
 }
 </style>
