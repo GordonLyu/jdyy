@@ -1,7 +1,7 @@
 <template>
   <el-page-header :back="router.back" :icon="ArrowLeft">
     <template #content>
-      <span class="text-large font-600 mr-3"> Title </span>
+      <span class="text-large font-600 mr-3"> {{ title }} </span>
     </template>
   </el-page-header>
 
@@ -25,9 +25,19 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from "vue";
 import router from "@/router";
+import { onBeforeRouteUpdate } from "vue-router";
 import { ArrowLeft } from "@element-plus/icons-vue";
 import Avatar from "@/components/Avatar.vue";
+
+const currentRouter = ref(router.currentRoute.value);
+
+const title = ref(currentRouter.value.meta.title);
+onBeforeRouteUpdate((to) => {
+  title.value = to.meta.title;
+  
+});
 </script>
 
 <style scoped>
@@ -42,7 +52,7 @@ import Avatar from "@/components/Avatar.vue";
   align-items: center;
   gap: 2rem;
 }
-.el-icon--right{
+.el-icon--right {
   margin-right: 1rem;
 }
 </style>

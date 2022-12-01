@@ -1,6 +1,6 @@
 <template>
   <el-container>
-      <el-aside width="auto"><Menu></Menu></el-aside>
+      <el-aside width="auto" class="a-scroll"><Menu></Menu></el-aside>
       <el-container>
         <el-header height="80px"><Header></Header></el-header>
         <el-main class="a-scroll"><RouterView></RouterView></el-main>
@@ -28,7 +28,7 @@ body{
 
 body::-webkit-scrollbar{
   width: 5px;
-  height: 100%;
+  height: 5px;
   background-color: rgb(235, 235, 235);
 }
 body::-webkit-scrollbar-thumb{
