@@ -11,7 +11,7 @@
           <el-button
             size="small"
             type="danger"
-            @click.prevent="removeUser(scope)"
+            @click.prevent="isRemoveUser(scope)"
           >
             删除
           </el-button>
@@ -20,13 +20,14 @@
     </el-table>
     <Pagination
       class="pagination"
-      :url="'user/getPage'"
+      :url="'user/page'"
       @get-current-page-data="getCurrentPageData"
     />
   </div>
 </template>
 
 <script lang="ts" setup>
+import { ElMessage,ElMessageBox } from "element-plus";
 import Pagination from "@/components/Pagination.vue";
 import request from "@/utils/requests";
 import { ref, reactive } from "vue";
@@ -38,8 +39,6 @@ const pageSize = ref(0);
 function getCurrentPageData(data: any) {
   currentPage.value = data.currentPage;
   pageSize.value = data.pageSize;
-  console.log(currentPage.value, pageSize.value);
-
   tableData.splice(0, tableData.length);
   data.list.forEach((value: never) => {
     tableData.push(value);
@@ -49,33 +48,54 @@ function getCurrentPageData(data: any) {
 //编辑用户
 function modifyUser() {}
 
+//是否确定删除用户警告
+const isRemoveUser = (scope:any) =>{
+  ElMessageBox.confirm(
+    '是否确认删除此用户？',
+    {
+      title:'删除用户',
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning'
+    }
+  ).then(()=>{//确定后
+    removeUser(scope);
+  }).catch(()=>{//取消后
+    
+  })
+}
+
 //删除用户
 function removeUser(scope: any) {
   console.log(scope.$index, scope.row.uid);
-  // tableData.splice(scope.$index, 1);
   request({
-    method: "post",
+    method: "DELETE",
     url: "user/remove",
     params: {
       uid: scope.row.uid,
     },
-  }).then((res) => {
+  }).then((res: any) => {
     //删除后重新获取数据
     request({
       method: "get",
-      url: "user/getPage",
+      url: "user/page",
       params: {
-        pageNum: currentPage.value,
+        currentPage: currentPage.value,
         pageSize: pageSize.value,
       },
     }).then((res) => {
-      tableData.splice(0, tableData.length);
+      tableData.splice(0, tableData.length);//清空旧的显示数据
       res.data.pageData.forEach((value: never) => {
         tableData.push(value);
       });
     });
-
     console.log(res);
+    if (res.code == 200) {
+      ElMessage.success({
+        message: res.message,
+        grouping: true
+      });
+    }
   });
 }
 </script>
@@ -91,7 +111,7 @@ function removeUser(scope: any) {
   justify-content: center;
 }
 .el-table {
-  animation: left-fade-in 0.3s;
+  animation: up-fade-in 0.3s;
   transition: 0.3s;
 }
 </style>

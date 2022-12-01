@@ -12,7 +12,7 @@
           <el-button
             size="small"
             type="danger"
-            @click.prevent="removeMusic(scope)"
+            @click.prevent="isRemoveMusic(scope)"
           >
             删除
           </el-button>
@@ -21,13 +21,14 @@
     </el-table>
     <Pagination
       class="pagination"
-      :url="'music/getPage'"
+      :url="'music/page'"
       @get-current-page-data="getCurrentPageData"
     />
   </div>
 </template>
 
 <script lang="ts" setup>
+import { ElMessage,ElMessageBox } from "element-plus";
 import Pagination from "@/components/Pagination.vue";
 import request from "@/utils/requests";
 import { ref, reactive } from "vue";
@@ -49,33 +50,52 @@ function getCurrentPageData(data: any) {
 //编辑音乐
 function modifyUser() {}
 
+//是否确定删除音乐警告
+const isRemoveMusic = (scope:any) =>{
+  ElMessageBox.confirm(
+    '是否确认删除此音乐？',
+    {
+      title:'删除音乐',
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning'
+    }
+  ).then(()=>{//确定后
+    removeMusic(scope);
+  }).catch(()=>{//取消后
+    
+  })
+}
+
 //删除音乐
 function removeMusic(scope: any) {
-  console.log(scope.$index, scope.row.musicId);
-  // tableData.splice(scope.$index, 1);
   request({
-    method: "post",
+    method: "DELETE",
     url: "music/remove",
     params: {
       musicId: scope.row.musicId,
     },
-  }).then((res) => {
+  }).then((res:any) => {
     //删除后重新获取数据
     request({
       method: "get",
-      url: "music/getPage",
+      url: "music/page",
       params: {
-        pageNum: currentPage.value,
+        currentPage: currentPage.value,
         pageSize: pageSize.value,
       },
     }).then((res) => {
-      tableData.splice(0, tableData.length);
+      tableData.splice(0, tableData.length);//清空旧的显示数据
       res.data.pageData.forEach((value: never) => {
         tableData.push(value);
       });
     });
-
-    console.log(res);
+    if (res.code == 200) {
+      ElMessage.success({
+        message: res.message,
+        grouping: true
+      });
+    }
   });
 }
 </script>
