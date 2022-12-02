@@ -12,7 +12,7 @@ import { RouterView } from 'vue-router'
 
 
 :root{
-  --color-theme-light:#rgb(148, 200, 227);
+  --color-theme-light:rgb(148, 200, 227);
   --color-theme:#61b4e0;
   --color-white:#fff;
 }
