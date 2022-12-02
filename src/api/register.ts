@@ -3,5 +3,5 @@ let config = {
     headers: {"Content-Type": "application/json"}
 };
  export function doRegister(admin:any) {
-    return request.post<any,ResponseSuccess<{code:string}>>('/user/register',admin,config)
+    return request.put<any,ResponseSuccess<{code:string}>>('/user/register',admin,config)
  }

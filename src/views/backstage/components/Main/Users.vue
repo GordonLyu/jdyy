@@ -20,7 +20,7 @@
     </el-table>
     <Pagination
       class="pagination"
-      :url="'user/getPage'"
+      :url="'user/page'"
       @get-current-page-data="getCurrentPageData"
     />
   </div>
@@ -63,7 +63,7 @@ function removeUser(scope: any) {
     //删除后重新获取数据
     request({
       method: "get",
-      url: "user/getPage",
+      url: "user/page",
       params: {
         pageNum: currentPage.value,
         pageSize: pageSize.value,

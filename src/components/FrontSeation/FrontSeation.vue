@@ -11,21 +11,23 @@
             <div class="musicSheetList">
                 <h1>精选歌单</h1>
                 <div class="box">
-                    <div v-for="item in firstitem" :key="item.id">
+                    <div v-for="item in firstitem" :key="item.id" >
                         <img :src=item.cover alt="">
                         <div>
-                            <p class="fa-user-plus" style="font-weight: lighter;">&nbsp;{{item.creator}}</p>
-                            <p>{{item.title}}</p>
-                            <p>{{item.copywriting}}</p>
+                            <p class="fa-user-plus" style="font-weight: lighter;">&nbsp;{{ item.creator }}</p>
+                            <p>{{ item.title }}</p>
+                            <p>{{ item.copywriting }}</p>
                         </div>
-                        
+
                     </div>
-                    <div  v-for="item in listMusic" :key="item.id">
-                        <strong class="fa-user-plus" style="font-weight: lighter;">&nbsp;{{item.creator}}</strong>
-                        <img :src=item.cover alt="">
-                        <p><icon class="fa-music"></icon>&nbsp; {{item.title}}</p>
+                    <div v-for="item in listMusic" :key="item.id" @click='toUrl("musicList",item.id,item)'>
+                        <strong class="fa-user-plus" style="font-weight: lighter;">&nbsp;{{ item.creator }}</strong>
+                        <img :src=item.cover >
+                        <p>
+                            <icon class="fa-music"></icon>&nbsp; {{ item.title }}
+                        </p>
                     </div>
-                    
+
                 </div>
 
 
@@ -34,9 +36,9 @@
 
             <div class="RankingList">
                 <h1>热门榜单</h1>
-                <div class="item" v-for="item in dataList" :key="item.id">
+                <div class="item" v-for="item in dataList" :key="item.id" @click='toUrl("musicPlay",item.id,item)'>
                     <div class="rank">{{ item.id }}</div>
-                    <div class="picture">
+                    <div class="picture"  >
                         <img :src=item.url>
                     </div>
                     <div class="author">
@@ -54,17 +56,38 @@
         </div>
 
     </div>
+
 </template>
 
 <script setup lang="ts">
+import router from '@/router/index'
+
+
+
+//从父组件获取到的榜单数据和歌单数据
 const props = defineProps<{
-    dataList:any[],
-    listMusic:any[]
+    dataList: any[],
+    listMusic: any[]
 }>()
 
 //大封面的数据
-let firstitem:any=[];
+let firstitem: any = [];
 firstitem.push(props.listMusic[0]);
+
+
+function toUrl(url: string,id:number, data:any) {
+    
+    let obj = JSON.stringify(data)
+    router.push(
+        {
+            name: url,
+            query: {
+                id:id,
+                data:obj
+            }
+        }
+    )
+}
 </script>
 
 <style scoped>
@@ -75,6 +98,7 @@ firstitem.push(props.listMusic[0]);
     /* border-top: 5px solid var(--color-theme); */
     background-image: linear-gradient(180deg, #2f6ed3 5%, #5095e4 20%, #5095e4 60%, #2f6ed3 95%);
     position: relative;
+    overflow: hidden;
 }
 
 #seation>div {
@@ -86,15 +110,19 @@ firstitem.push(props.listMusic[0]);
 
 
 /* 背景圆动画 */
- 
+
 @keyframes animate {
-    0%, 100%{
+
+    0%,
+    100% {
         transform: translateY(-50px);
     }
+
     50% {
         transform: translateY(50px);
     }
 }
+
 /* 背景圆*/
 #seation>img {
     position: absolute;
@@ -129,6 +157,7 @@ firstitem.push(props.listMusic[0]);
     left: 57%;
 
 }
+
 #seation>img:nth-of-type(5) {
     width: 15%;
     top: 60%;
@@ -171,8 +200,8 @@ firstitem.push(props.listMusic[0]);
     margin-top: 20px;
     display: flex;
     background: rgba(255, 255, 255, 0.15);
-    box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, 
-    rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px,
+        rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
     /* backdrop-filter: blur(1px);
     -webkit-backdrop-filter: blur(1px); */
     border-radius: 10px;
@@ -272,28 +301,30 @@ firstitem.push(props.listMusic[0]);
 #seation div .musicSheetList .box {
     width: 100%;
     display: flex;
-    justify-content:space-around;
+    justify-content: space-around;
     flex-wrap: wrap;
     margin-top: 20px;
     padding-bottom: 4rem;
 }
+
 /* 精选歌单的大封面盒子 */
-#seation div .musicSheetList .box>div:nth-of-type(1){
-   width: 95%;
-   height:28rem ;
-   /* border: 1px solid; */
-   display: flex;
-   justify-content: center;
-   align-items: center;
-   border-radius: 10px;
-   box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+#seation div .musicSheetList .box>div:nth-of-type(1) {
+    width: 95%;
+    height: 28rem;
+    /* border: 1px solid; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
     /* 优化高斯模糊 */
     transform: translateZ(0);
     background-color: #2f6ed3;
     position: relative;
 }
+
 /* 精选歌单的大封面 */
-#seation div .musicSheetList .box>div:nth-of-type(1)>img{
+#seation div .musicSheetList .box>div:nth-of-type(1)>img {
     width: 30%;
     aspect-ratio: 1/1;
     margin: 0 10%;
@@ -303,17 +334,20 @@ firstitem.push(props.listMusic[0]);
     object-fit: cover;
     /* border-radius:10px 0 0 10px;  */
     animation: rot 10s linear infinite;
-} 
-@keyframes rot{
-    from{
+}
+
+@keyframes rot {
+    from {
         transform: rotate(360deg);
     }
-    to{
+
+    to {
         transform: rotate(0deg);
     }
 }
+
 /* 精选歌单的简介以及歌单名的盒子*/
-#seation div .musicSheetList .box>div:nth-of-type(1)>div{
+#seation div .musicSheetList .box>div:nth-of-type(1)>div {
     width: 50%;
     height: 100%;
     display: flex;
@@ -323,25 +357,28 @@ firstitem.push(props.listMusic[0]);
     /* border-radius:0 10px 10px 0;  */
     cursor: pointer;
 }
+
 #seation div .musicSheetList .box>div:nth-of-type(1)>div p:nth-of-type(2),
-#seation div .musicSheetList .box>div:nth-of-type(1)>div p:nth-of-type(3){
-    min-width:20rem;
+#seation div .musicSheetList .box>div:nth-of-type(1)>div p:nth-of-type(3) {
+    min-width: 20rem;
     height: 5rem;
     /* border: 1px solid; */
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
     margin-left: 1vw;
-    font-size:3vw;
+    font-size: 3vw;
     color: var(--color-white);
     font-weight: 900;
 }
-#seation div .musicSheetList .box>div:nth-of-type(1)>div p:nth-of-type(3){
+
+#seation div .musicSheetList .box>div:nth-of-type(1)>div p:nth-of-type(3) {
     height: 3rem;
-    font-size:1vw;
+    font-size: 1vw;
 }
+
 /* 精选歌单的创建者 */
-#seation div .musicSheetList .box>div:nth-of-type(1)>div p:nth-of-type(1){
+#seation div .musicSheetList .box>div:nth-of-type(1)>div p:nth-of-type(1) {
     position: absolute;
     width: 5rem;
     height: 2rem;
@@ -353,48 +390,52 @@ firstitem.push(props.listMusic[0]);
     left: -100.4%;
     /* border-radius:10px 0 0 0; */
     /* border: 1px solid; */
-    box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, 
-    rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
-    font-family:FontAwesome ;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px,
+        rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+    font-family: FontAwesome;
 }
+
 /* 小歌单 */
-#seation div .musicSheetList .box div:nth-of-type(n+2){
+#seation div .musicSheetList .box div:nth-of-type(n+2) {
     width: auto;
     height: 14rem;
     /* border: 1px solid; */
-    box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, 
-    rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px,
+        rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
     margin-top: 4rem;
     position: relative;
-    font-family:FontAwesome ;
+    font-family: FontAwesome;
     cursor: pointer;
 }
-#seation div .musicSheetList .box div:nth-of-type(n+2) strong{
+
+#seation div .musicSheetList .box div:nth-of-type(n+2) strong {
     width: 5rem;
     height: 2rem;
     display: flex;
     justify-content: center;
     align-items: center;
     color: var(--color-white);
-    box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, 
-    rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px,
+        rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
     position: absolute;
 
 }
-#seation div .musicSheetList .box div:nth-of-type(n+2) img{
-   width: auto;
-   height: 14rem;
-   object-fit: cover;
+
+#seation div .musicSheetList .box div:nth-of-type(n+2) img {
+    width: auto;
+    height: 14rem;
+    object-fit: cover;
 }
-#seation div .musicSheetList .box div:nth-of-type(n+2) p{
+
+#seation div .musicSheetList .box div:nth-of-type(n+2) p {
     width: 100%;
     height: 2rem;
     display: flex;
     align-items: center;
-    padding-left:.5rem ;
+    padding-left: .5rem;
     font-size: 12px;
-    box-shadow: rgba(221, 221, 228, 0.25) 0px 2px 5px -1px, 
-    rgba(28, 25, 25, 0.3) 0px 1px 3px -1px;
+    box-shadow: rgba(221, 221, 228, 0.25) 0px 2px 5px -1px,
+        rgba(28, 25, 25, 0.3) 0px 1px 3px -1px;
     color: var(--color-white);
 }
 </style>

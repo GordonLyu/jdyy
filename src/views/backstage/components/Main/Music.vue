@@ -21,7 +21,7 @@
     </el-table>
     <Pagination
       class="pagination"
-      :url="'music/getPage'"
+      :url="'music/page'"
       @get-current-page-data="getCurrentPageData"
     />
   </div>
@@ -63,7 +63,7 @@ function removeMusic(scope: any) {
     //删除后重新获取数据
     request({
       method: "get",
-      url: "music/getPage",
+      url: "music/page",
       params: {
         pageNum: currentPage.value,
         pageSize: pageSize.value,

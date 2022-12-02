@@ -1,28 +1,28 @@
 <template>
-    <div id="container">
+    <div id="container"  v-if="$route.meta.showFooter">
         <FroutHeader/>
         <FroutSwiper/>
         <FroutSeation :dataList="dataList" :listMusic="listMusic"/>
     </div>
+    <RouterView v-else/>
 </template>
 
 <script setup lang="ts">
 import FroutHeader from "@/components/FrontHeader/FroutHeader.vue";
 import FroutSwiper from "@/components/FrontSwiper/FrontSwiper.vue";
 import FroutSeation from "@/components/FrontSeation/FrontSeation.vue";
-
 import { reactive } from 'vue';
-
+import { RouterView } from "vue-router";
 
 // 磅单
 let ListData=[
         {
             id:1,//歌曲的id
             Lid:1,//歌单列表
-            name:"dddd",//歌曲名称
-            author:"dddd",//歌曲作者
+            name:"我的天空",//歌曲名称
+            author:"cuanzi",//歌曲作者
             url:'/public/image/nav1.jpg',//封面路径
-            musicUrl:'',//歌曲地址
+            musicUrl:'http://localhost:8080/music/audio/mid_49.mp3',//歌曲地址
             clickNum:212//播放数
         },
         {
@@ -134,6 +134,8 @@ let ListData=[
 //向froutSeation传递热歌榜单数据
 const dataList = reactive(ListData)
 const listMusic = reactive(musicList)
+
+
 
 
 </script>

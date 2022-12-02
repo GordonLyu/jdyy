@@ -51,7 +51,7 @@ getCurrentPage(1,10);
 //获取当前页的数据
 function getCurrentPage(PN:number,PS:number){ 
   request({
-  url:`${props.url}?pageNum=${PN}&pageSize=${PS}`
+  url:`${props.url}?currentPage=${PN}&pageSize=${PS}`
 }).then((res)=>{
   console.log(res);
   total.value = res.data.allDataSum;

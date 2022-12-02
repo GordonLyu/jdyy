@@ -88,7 +88,7 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
 import type { FormInstance } from 'element-plus'
-import card from "@/components/card/card.vue";
+import card from "@/components/Card/Card.vue";
 import { User, Lock } from "@element-plus/icons-vue";
 import { ElMessage } from "element-plus";
 import { doRegister } from '@/api/register';

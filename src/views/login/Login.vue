@@ -51,11 +51,32 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
 import type { FormInstance } from 'element-plus'
-import card from "@/components/card/card.vue";
+import card from "@/components/Card/Card.vue";
 import { User, Lock } from "@element-plus/icons-vue";
 import { ElMessage } from "element-plus";
 import { doLogin } from '@/api/login';
-import qs from "qs";
+import useUserStore from "@/stores/user"
+
+const userData = reactive({
+  username: '',
+  password: '',
+})
+
+// 实例化 store
+const userStore = useUserStore()
+
+const onLogin = async () => {
+  // 使用 actions，当作函数一样直接调用
+  // login action 定义为了 async 函数，所以它返回一个 Promise
+  await userStore.login(ruleForm);
+  userData.username = ''
+  userData.password = ''
+}
+
+const onLogout = () => {
+  userStore.logout()
+}
+
 
 
 const ruleFormRef = ref<FormInstance>()

@@ -1,12 +1,12 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import BackstageView from '@/views/backstage/Backstage.vue'
 import Users from '@/views/backstage/components/Main/Users.vue'
-import adminLogin from '@/views/login/Login.vue'
-import Register from '@/views/register/Register.vue'
+import adminLogin from '@/views/Login/Login.vue'
+import Register from '@/views/Register/Register.vue'
 import Music from '@/views/backstage/components/Main/Music.vue'
-import musicFrout from '@/views/fronts/musicFrout.vue'
-import musicPlay from '@/views/fronts/musicPlay/musicPlay.vue'
-import musicLIst from '@/views/fronts/musicList/musicLIst.vue'
+import musicFrout from '@/views/Fronts/MusicFrout.vue'
+import musicPlay from '@/views/Fronts/MusicPlay/MusicPlay.vue'
+import musicList from '@/views/Fronts/MusicList/MusicList.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -42,16 +42,28 @@ const router = createRouter({
       path:'/musicFrout',
       name:'musicFrout',
       component:musicFrout,
+      meta:{
+        showFooter: true
+     },
       children:[
         {
-          path:'/musicFrout/musicList/:id',
-          component: musicLIst
+          path:'musicList',
+      name:'musicList',
+          component: musicList,
+          meta:{
+            showFooter: false
+         }
         },
         {
-          path:'/musicFrout/musicPlay/:id',
-          component:musicPlay
+          path:'musicPlay',
+          name:'musicPlay',
+          component:musicPlay,
+          meta:{
+            showFooter: false
+         }
         },
-      ]
+      ],
+      
     },
     {
       path:'/login',
@@ -69,5 +81,8 @@ const router = createRouter({
     }
   ]
 })
+
+
+
 
 export default router
