@@ -7,8 +7,22 @@
 
         </div>
         <div class="navRight">
-            <span style="margin-left: .5rem;">cuanzi</span>
-            <span> | </span>
+            <el-dropdown >
+                <span class="el-dropdown-link">
+                    cuanzi
+                    <el-icon class="el-icon--right">
+                        <arrow-down />
+                    </el-icon>
+                </span>
+                <template #dropdown>
+                    <el-dropdown-menu>
+                        <el-dropdown-item @click="dialogFormVisible = true">添加歌单</el-dropdown-item>
+                        <el-dropdown-item divided>个人信息</el-dropdown-item>
+                        <el-dropdown-item divided>注销</el-dropdown-item>
+                    </el-dropdown-menu>
+                </template>
+            </el-dropdown>
+            <span>&nbsp;&nbsp; | &nbsp;&nbsp;</span>
             <button>
                 <router-link to="/login">登录</router-link>
             </button>
@@ -16,10 +30,52 @@
         </div>
         <div class="view"></div>
     </div>
+
+
+    <!-- 添加歌单的弹出框 -->
+    <el-dialog v-model="dialogFormVisible" title="Shipping address">
+    <el-form :model="form">
+        
+      <el-form-item label="Promotion name" :label-width="formLabelWidth">
+        <el-input v-model="form.listName" autocomplete="off" />
+      </el-form-item>
+      <el-form-item label="Zones" :label-width="formLabelWidth">
+        <el-select v-model="form.region" placeholder="Please select a zone">
+          <el-option label="Zone No.1" value="shanghai" />
+          <el-option label="Zone No.2" value="beijing" />
+        </el-select>
+      </el-form-item>
+    </el-form>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">Cancel</el-button>
+        <el-button type="primary" @click="dialogFormVisible = false">
+          Confirm
+        </el-button>
+      </span>
+    </template>
+  </el-dialog>
 </template>
 
 <script setup lang="ts">
+import { ArrowDown } from '@element-plus/icons-vue'
+import { reactive, ref } from 'vue'
 
+//是否显示弹出框响应式值
+const dialogFormVisible = ref(false)
+const formLabelWidth = '140px'
+
+
+
+
+const form = reactive({
+  listName: '',
+  region: '',
+  delivery: false,
+  type: [],
+  resource: '',
+  desc: '',
+})
 </script>
 
 <style scoped>
@@ -73,9 +129,11 @@
     border-radius: 10px;
     border: 1px solid rgba(255, 255, 255, 0.18);
 }
-.nav .navRight a{
+
+.nav .navRight a {
     color: var(--color-white);
 }
+
 .nav .navRight button:hover {
     animation: btn .6s linear;
 }
@@ -120,13 +178,20 @@
 } */
 
 /* 用户名 */
-.navRight span:nth-of-type(1) {
+.example-showcase .el-dropdown-link {
+    cursor: pointer;
+    color: var(--el-color-primary);
+    display: flex;
+    align-items: center;
+}
+
+/* .navRight span:nth-of-type(1) {
     display: inline-block;
     border-bottom: 2px solid;
     font-weight: 900;
     cursor: pointer;
-    /* text-shadow: 0px -1px 2px; */
-}
+    text-shadow: 0px -1px 2px;
+} */
 
 /* 用户名和登录按钮之间的“ | ” */
 .navRight span:nth-of-type(2) {

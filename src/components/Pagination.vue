@@ -64,7 +64,6 @@ function getCurrentPage(PN:number,PS:number){
     currentPage:PN,
     pageSize:PS
   }
-  
 }).then((res)=>{
   console.log(res);
   total.value = res.data.allDataSum;
