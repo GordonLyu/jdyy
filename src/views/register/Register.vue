@@ -13,6 +13,7 @@
                     </el-input>
                 </el-form-item>
 
+                
                 <!-- 昵称 -->
                 <!-- <el-form-item prop="nickName">
                     <el-input

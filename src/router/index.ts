@@ -8,9 +8,9 @@ import Test from '@/views/backstage/components/Main/Test.vue'
 
 import adminLogin from '@/views/Login/Login.vue'
 import Register from '@/views/Register/Register.vue'
-import musicFrout from '@/views/Fronts/MusicFrout.vue'
-import musicPlay from '@/views/Fronts/MusicPlay/MusicPlay.vue'
-import musicList from '@/views/Fronts/MusicList/MusicList.vue'
+import MusicFrout from '@/views/Fronts/musicFrout.vue'
+import musicPlay from '@/views/Fronts/MusicPlay/musicPlay.vue'
+import musicList from '@/views/Fronts/MusicList/musicList.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -21,7 +21,7 @@ const router = createRouter({
       path: '/admin',
       name: 'backstage',
       meta:{
-        title:"后台管理系统"
+        title:"首页"
       },
       component: BackstageView,
       children:[
@@ -43,14 +43,14 @@ const router = createRouter({
           path: 'users',
           name: 'users',
           meta:{
-            title:"用户表"
+            title:"用户管理"
           },
           component: Users
         },{
           path: 'music',
           name: 'music',
           meta:{
-            title:"音乐表"
+            title:"音乐管理"
           },
           component: Music
         },{
@@ -69,10 +69,7 @@ const router = createRouter({
     {
       path:'/musicFrout',
       name:'musicFrout',
-      component:musicFrout,
-      meta:{
-        showFooter: true
-     },
+      component:MusicFrout,
       children:[
         {
           path:'musicList',
@@ -114,7 +111,13 @@ const router = createRouter({
   ]
 })
 
-
-
+//前置路由守卫
+router.beforeEach((to, from, next) => {
+  //后台管理标题
+  document.title = "Vite App";
+  if(to.matched[0].path=='/admin')
+    document.title ="后台 | "+to.meta.title;
+  next()
+})
 
 export default router
