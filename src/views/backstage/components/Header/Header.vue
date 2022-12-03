@@ -1,7 +1,9 @@
 <template>
   <el-page-header :back="router.back" :icon="ArrowLeft">
     <template #content>
-      <span class="text-large font-600 mr-3"> {{ title }} </span>
+      <el-breadcrumb separator="/">
+        <el-breadcrumb-item v-for="item in routers" :to="{ path: item.path }">{{item.meta.title}}</el-breadcrumb-item>
+      </el-breadcrumb>
     </template>
   </el-page-header>
 
@@ -26,17 +28,20 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import router from "@/router";
-import { onBeforeRouteUpdate } from "vue-router";
+import { useRouter } from "vue-router";
 import { ArrowLeft } from "@element-plus/icons-vue";
 import Avatar from "@/components/Avatar.vue";
 
-const currentRouter = ref(router.currentRoute.value);
+const router = useRouter();
+// console.log(router.currentRoute.value.matched);
 
-const title = ref(currentRouter.value.meta.title);
-onBeforeRouteUpdate((to) => {
-  title.value = to.meta.title;
-  
+// router.currentRoute.value.meta.title
+const routers = ref(router.currentRoute.value.matched);
+router.afterEach((to) => {
+  routers.value.splice(0, routers.value.length);
+  to.matched.forEach((item) => {
+    routers.value.push(item);
+  });
 });
 </script>
 
