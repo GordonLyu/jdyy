@@ -20,6 +20,9 @@
     </el-table>
     <Pagination
       class="pagination"
+      :jumper="true"
+      :total="true"
+      :sizes="true"
       :url="'user/page'"
       @get-current-page-data="getCurrentPageData"
     />
