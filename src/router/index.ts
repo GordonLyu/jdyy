@@ -8,9 +8,9 @@ import Test from '@/views/backstage/components/Main/Test.vue'
 
 import adminLogin from '@/views/Login/Login.vue'
 import Register from '@/views/Register/Register.vue'
-import musicFrout from '@/views/Fronts/musicFrout.vue'
-import musicPlay from '@/views/Fronts/MusicPlay/musicPlay.vue'
-import musicList from '@/views/Fronts/MusicList/musicList.vue'
+import musicFrout from '@/views/Fronts/MusicFrout.vue'
+import musicPlay from '@/views/Fronts/MusicPlay/MusicPlay.vue'
+import musicList from '@/views/Fronts/MusicList/MusicList.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
