@@ -36,7 +36,8 @@ import { ref } from "vue";
 
 //子组件接收父组件
 const props = defineProps<{
-  url?: String; //请求地址
+  url?:String,//请求地址
+  id?:number//歌单id
   total?: Boolean; //是否显示数据量
   sizes?: Boolean; //是否显示分页大小选择
   jumper?: Boolean; //是否显示跳页
@@ -51,6 +52,8 @@ const currentPage = ref(1);
 const pageSize = ref(10);
 const small = ref(false);
 const disabled = ref(false);
+
+
 
 //页数大小
 const handleSizeChange = (val: number) => {
@@ -71,13 +74,16 @@ function getCurrentPage(PN: number, PS: number) {
     params: {
       currentPage: PN,
       pageSize: PS,
+    lid:props.id,
     },
+  
   }).then((res) => {
     console.log(res);
     total.value = res.data.allDataSum;
     let data = {
       pageSize: pageSize.value,
       currentPage: currentPage.value,
+    lid:props.id,
       list: res.data.pageData,
     };
     emits("getCurrentPageData", data);

@@ -75,8 +75,8 @@ const router = createRouter({
       },
       children:[
         {
-          path:'musicList',
-      name:'musicList',
+          path:'musicList/:id',
+          name:'musicList',
           component: musicList,
           meta:{
             showFooter: false

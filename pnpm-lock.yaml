@@ -1230,6 +1230,7 @@ packages:
   /has-property-descriptors/1.0.0:
     resolution: {integrity: sha512-62DVLZGoiEBDHQyqG4w9xCuZ7eJEwNmJRWw2VY84Oedb7WFcA27fiEVe8oUQx9hAUJ4ekurquucTGwsyO1XGdQ==}
     dependencies:
+<<<<<<<<< Temporary merge branch 1
       get-intrinsic: 1.1.3
     dev: true
 
