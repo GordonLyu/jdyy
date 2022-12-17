@@ -32,8 +32,8 @@
 <script lang="ts" setup>
 import { ElMessage,ElMessageBox } from "element-plus";
 import Pagination from "@/components/Pagination.vue";
-import request from "@/utils/requests";
 import { ref, reactive } from "vue";
+import api from "@/api";
 
 const tableData = reactive([]);
 const currentPage = ref(0);
@@ -51,7 +51,7 @@ function getCurrentPageData(data: any) {
 //编辑用户
 function modifyUser() {}
 
-//是否确定删除用户警告
+//删除用户警告
 const isRemoveUser = (scope:any) =>{
   ElMessageBox.confirm(
     '是否确认删除此用户？',
@@ -71,22 +71,9 @@ const isRemoveUser = (scope:any) =>{
 //删除用户
 function removeUser(scope: any) {
   console.log(scope.$index, scope.row.uid);
-  request({
-    method: "DELETE",
-    url: "user/remove",
-    params: {
-      uid: scope.row.uid,
-    },
-  }).then((res: any) => {
+  api.user.delete(scope.row.uid).then((res: any) => {
     //删除后重新获取数据
-    request({
-      method: "get",
-      url: "user/page",
-      params: {
-        currentPage: currentPage.value,
-        pageSize: pageSize.value,
-      },
-    }).then((res) => {
+    api.user.getUserPage(currentPage.value,pageSize.value).then((res) => {
       tableData.splice(0, tableData.length);//清空旧的显示数据
       res.data.pageData.forEach((value: never) => {
         tableData.push(value);

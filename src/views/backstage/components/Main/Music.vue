@@ -31,16 +31,16 @@
 </template>
 
 <script lang="ts" setup>
-import { ElMessage,ElMessageBox } from "element-plus";
+import { ElMessage, ElMessageBox } from "element-plus";
 import Pagination from "@/components/Pagination.vue";
-import request from "@/utils/requests";
 import { ref, reactive } from "vue";
+import api from "@/api";
 
 const tableData = reactive([]);
 const currentPage = ref(0);
 const pageSize = ref(0);
 
-function getCurrentPageData(data: any) {
+const getCurrentPageData = (data: any) => {
   tableData.splice(0, tableData.length);
   currentPage.value = data.currentPage;
   pageSize.value = data.pageSize;
@@ -48,47 +48,34 @@ function getCurrentPageData(data: any) {
   data.list.forEach((value: never) => {
     tableData.push(value);
   });
-}
+};
 
 //编辑音乐
 function modifyUser() {}
 
-//是否确定删除音乐警告
-const isRemoveMusic = (scope:any) =>{
-  ElMessageBox.confirm(
-    '是否确认删除此音乐？',
-    {
-      title:'删除音乐',
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
-      type: 'warning'
-    }
-  ).then(()=>{//确定后
-    removeMusic(scope);
-  }).catch(()=>{//取消后
-    
+//删除音乐警告
+const isRemoveMusic = (scope: any) => {
+  ElMessageBox.confirm("是否确认删除此音乐？", {
+    title: "删除音乐",
+    confirmButtonText: "确定",
+    cancelButtonText: "取消",
+    type: "warning",
   })
-}
+    .then(() => {
+      //确定后
+      removeMusic(scope);
+    })
+    .catch(() => {
+      //取消后
+    });
+};
 
 //删除音乐
 function removeMusic(scope: any) {
-  request({
-    method: "DELETE",
-    url: "music/remove",
-    params: {
-      musicId: scope.row.musicId,
-    },
-  }).then((res:any) => {
+  api.music.deleteMusic(scope.row.musicId).then((res: any) => {
     //删除后重新获取数据
-    request({
-      method: "get",
-      url: "music/page",
-      params: {
-        currentPage: currentPage.value,
-        pageSize: pageSize.value,
-      },
-    }).then((res) => {
-      tableData.splice(0, tableData.length);//清空旧的显示数据
+    api.music.getMusicPage(currentPage.value, pageSize.value).then((res) => {
+      tableData.splice(0, tableData.length); //清空旧的显示数据
       res.data.pageData.forEach((value: never) => {
         tableData.push(value);
       });
@@ -96,7 +83,7 @@ function removeMusic(scope: any) {
     if (res.code == 200) {
       ElMessage.success({
         message: res.message,
-        grouping: true
+        grouping: true,
       });
     }
   });

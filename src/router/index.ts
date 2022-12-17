@@ -70,6 +70,9 @@ const router = createRouter({
       path:'/musicFrout',
       name:'musicFrout',
       component:MusicFrout,
+      meta:{
+        showFooter: true
+      },
       children:[
         {
           path:'musicList',
