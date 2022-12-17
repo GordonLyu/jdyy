@@ -1,17 +1,17 @@
 <template>
-  <el-form label-position="top" label-width="100px" :model="formLabelAlign">
+  <el-form label-position="top" label-width="100px" :model="form">
     <el-form-item label="用户名">
-      <el-input v-model="formLabelAlign.username" size="large" />
+      <el-input v-model="form.username" size="large" />
     </el-form-item>
     <el-form-item label="密码">
       <el-input
-        v-model="formLabelAlign.password"
+        v-model="form.password"
         type="password"
         size="large"
       />
     </el-form-item>
     <el-form-item label="角色">
-      <el-select v-model="formLabelAlign.role" size="large">
+      <el-select v-model="form.role" size="large">
         <el-option label="用户" value="user" />
         <el-option label="管理员" value="admin" />
       </el-select>
@@ -24,22 +24,18 @@
 </template>
 
 <script lang="ts" setup>
-import request from "@/utils/requests";
 import { ElMessage } from "element-plus";
 import { reactive, ref } from "vue";
+import api from "@/api";
 
-const formLabelAlign = reactive({
+const form = reactive({
   username: "",
   password: "",
   role: "user",
 });
 
 const submit = () => {
-  request({
-    url: "user/add",
-    method: "PUT",
-    data: formLabelAlign,
-  }).then((res: any) => {
+  api.user.add(form).then((res: any) => {
     if (res.code == 200) {
       ElMessage.success({
         message: res.message,
@@ -55,9 +51,9 @@ const submit = () => {
 };
 
 const reset = () => {
-  formLabelAlign.username = "";
-  formLabelAlign.password = "";
-  formLabelAlign.role = "user";
+  form.username = "";
+  form.password = "";
+  form.role = "user";
 };
 </script>
 <style scoped>

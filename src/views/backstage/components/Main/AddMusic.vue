@@ -1,10 +1,10 @@
 <template>
-  <el-form label-position="top" label-width="100px" :model="formLabelAlign">
+  <el-form label-position="top" label-width="100px" :model="form">
     <el-form-item label="音乐名">
-      <el-input v-model="formLabelAlign.musicName" size="large" />
+      <el-input v-model="form.musicName" size="large" />
     </el-form-item>
     <el-form-item label="作者">
-      <el-input v-model="formLabelAlign.author" size="large" />
+      <el-input v-model="form.author" size="large" />
     </el-form-item>
     <el-form-item label="封面">
       <Upload
@@ -25,51 +25,29 @@
 </template>
 
 <script lang="ts" setup>
-import request from "@/utils/requests";
 import Upload from "@/components/Upload";
 import { ElMessage } from "element-plus";
 import { reactive, ref } from "vue";
+import api from "@/api";
 
-const formData = new FormData();
-const formLabelAlign = reactive({
+const form = reactive({
   musicName: "",
   author: "",
+  musicFile: "",
+  coverFile: "",
 });
 
 const uploadRef = ref();
 const uploadImgRef = ref();
 
-// //解决 'for in' 遍历，获取值时 ts报错问题
-const isValidKey = (
-  key: string | number | symbol,
-  object: object
-): key is keyof typeof object => {
-  return key in object;
-};
+//获取音乐的文件放到formData里面
+const getCoverFile = (file: any) => (form.coverFile = file);
 
 //获取音乐的文件放到formData里面
-const getCoverFile = (file: any) => {
-  console.log(file);
-  
-  formData.set("coverFile", file);
-};
-
-//获取音乐的文件放到formData里面
-const getMusicFile = (file: any) => {
-  formData.set("musicFile", file);
-};
+const getMusicFile = (file: any) => (form.musicFile = file);
 
 const submit = () => {
-  for (let key in formLabelAlign) {
-    if (isValidKey(key, formLabelAlign)) {
-      formData.set(key, formLabelAlign[key]);
-    }
-  }
-  request({
-    url: "music/add",
-    method: "PUT",
-    data: formData,
-  }).then((res: any) => {
+  api.music.addMusic(form).then((res: any) => {
     console.log(res);
     //添加正常
     if (res.code == 200) {
@@ -87,8 +65,8 @@ const submit = () => {
 };
 
 const reset = () => {
-  formLabelAlign.musicName = "";
-  formLabelAlign.author = "";
+  form.musicName = "";
+  form.author = "";
   uploadRef.value!.clearFiles();
   uploadImgRef.value!.clearFiles();
 };
