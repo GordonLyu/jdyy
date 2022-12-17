@@ -22,6 +22,7 @@
     "swiper": "^7.4.1",
     "vue": "^3.2.37",
     "vue-axios": "^3.5.2",
+    "vue-picture-cropper": "^0.5.1",
     "vue-router": "^4.1.2",
     "vuex": "^4.0.2"
   },

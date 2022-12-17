@@ -17,8 +17,16 @@
 </template>
 
 <script setup lang="ts">
+/*
+属性：
+  url:string - 请求地址
+
+事件：
+  @get-current-page-data->object[] - 获取当前页返回的数据
+*/
+
 import request from "@/utils/requests";
-import { ref, defineProps, defineEmits } from "vue";
+import { ref } from "vue";
 
 //子组件接收父组件
 const props = defineProps<{
@@ -51,11 +59,16 @@ getCurrentPage(1,10);
 //获取当前页的数据
 function getCurrentPage(PN:number,PS:number){ 
   request({
-  url:`${props.url}?currentPage=${PN}&pageSize=${PS}`
+  url:`${props.url}`,
+  params:{
+    currentPage:PN,
+    pageSize:PS
+  }
+  
 }).then((res)=>{
   console.log(res);
   total.value = res.data.allDataSum;
-  var data = {
+  let data = {
     pageSize:pageSize.value,
     currentPage:currentPage.value,
     list:res.data.pageData
