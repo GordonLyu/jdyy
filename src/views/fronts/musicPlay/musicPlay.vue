@@ -16,11 +16,11 @@
             <div class="cover">
 
                 <div class="image">
-                    <img src="@/assets/image/nav3.jpg" alt="">
+                    <img :src="`http://localhost:8080/${musicData.coverURL}`" alt="">
                 </div>
                 <div class="message">
-                    <h1>{{musicData.name}}</h1>
-                    <p style="width: max-content;">{{musicData.author}}</p>
+                    <h1>{{ musicData.musicName }}</h1>
+                    <p style="width: max-content;">{{ musicData.author }}</p>
                 </div>
 
             </div>
@@ -57,7 +57,7 @@
                         <input type="range" v-model="value" min="0" max="100" @drag-start="pause" @drag-end="play"
                             @input="change" />
                     </div>
-                    
+
 
                     <div class="speed">
                         <select @change="rateChange" v-model="rate">
@@ -82,6 +82,8 @@
 
 <script>
 import { Howl } from 'howler'
+import {toRaw} from 'vue'
+
 export default {
     name: 'video-test',
     data() {
@@ -96,7 +98,7 @@ export default {
             show: true,
             currentIndex: 0,
             muted: false,
-            musicData:[],//音乐数据
+            musicData: [],//音乐数据
         }
     },
     components: {
@@ -107,10 +109,16 @@ export default {
     mounted() {
         this.audioPlayer()
     },
+    beforeRouteLeave() {
+        this.sound.stop()
+
+    }, destroyed() {
+        console.log('destroyed')
+    },
     methods: {
         audioPlayer() {
             let that = this
-            let img=document.querySelector('.image>img');
+            let img = document.querySelector('.image>img');
             this.sound = new Howl({
                 src: this.audioSrc[this.currentIndex % this.audioSrc.length],
                 autoplay: false,
@@ -123,12 +131,12 @@ export default {
                 onload() {
                     console.log('onload!', this);
                     console.log(that);
-                    const form=JSON.parse(that.$route.query.data)
-                    console.log(form.musicUrl);
+                    const form = JSON.parse(window.sessionStorage.getItem('tagUser'))
+                    console.log(form.url);
                     that.audioSrc.push(
-                        form.musicUrl
+                        "http://localhost:8080/"+form.url
                     )
-                    that.musicData=form
+                    that.musicData = form
                     console.log(that.audioSrc);
                     console.log(that.musicData);
                 },
@@ -336,22 +344,25 @@ export default {
     width: 35%;
     // border: 1px solid;
 }
+
 // 唱片动画
-.rotate{
-        animation:a 10s linear infinite forwards;
-    }
-.pause{
+.rotate {
+    animation: a 10s linear infinite forwards;
+}
+
+.pause {
     animation-play-state: paused;
 }
-    
-@keyframes a{
-        from{
-            transform: rotate(0);
-        }
-        to{
-            transform: rotate(360deg);
-        }
+
+@keyframes a {
+    from {
+        transform: rotate(0);
     }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
 
 .cover .image img {
     width: 100%;
@@ -379,7 +390,8 @@ export default {
     color: rgb(88, 88, 88);
     text-shadow: 0px 0px 0px black;
 }
-.control icon:hover{
+
+.control icon:hover {
     color: #2f6ed3;
 
 }
@@ -420,10 +432,10 @@ export default {
     width: 4rem;
     height: 4rem;
     color: var(--color-white);
-   background-color: transparent;
+    background-color: transparent;
     border: none;
-    outline:none ;
-    font-family:fontawesome;
+    outline: none;
+    font-family: fontawesome;
     cursor: pointer;
     // color: var(--color-white);
     // background: rgba(255, 255, 255, 0.15);
@@ -442,16 +454,17 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding:0 1rem ;
+    padding: 0 1rem;
 }
 
 .volume input {
     // position: absolute;
     left: -50%;
-    top: -100%; 
+    top: -100%;
     margin-left: 1rem;
-   
+
 }
+
 //音量条
 .volume input {
     color: var(--color-white);
@@ -483,6 +496,7 @@ export default {
     align-items: center;
     color: var(--color-white);
 }
+
 .progress input {
     color: var(--color-white);
     background: rgba(255, 255, 255, 0.15);
@@ -511,13 +525,14 @@ export default {
     color: black;
 
 }
-select option{
-     /* 清除默认的箭头样式 */
-     appearance: none;
-     background: rgba(255, 255, 255, 0.15);
+
+select option {
+    /* 清除默认的箭头样式 */
+    appearance: none;
+    background: rgba(255, 255, 255, 0.15);
     backdrop-filter: blur(1px);
-    
-     
+
+
 }
 
 

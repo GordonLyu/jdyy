@@ -14,10 +14,10 @@
     <div class="musicList">
       <div class="message">
         <div class="cover">
-          <img :src=form.cover alt="">
+          <img :src="`http://localhost:8080/${form.cover}`" alt="">
         </div>
         <div class="boxMessage">
-          <h1 class="title">{{ form.title }}</h1>
+          <h1 class="title">{{ form.listName }}</h1>
           <div class="creator">
             <p>{{ form.creator }}</p>
             <p class="createTime"> 创建时间：{{ form.createTime }}</p>
@@ -30,7 +30,7 @@
             </button>
           </div>
           <p style="color:var(--color-white);">简介:</p>
-          <p class="copywriting">{{ form.copywriting }}</p>
+          <p class="copywriting">{{ form.detail }}</p>
         </div>
       </div>
 
@@ -51,8 +51,7 @@
           </template>
         </el-table-column>
       </el-table>
-      <Pagination class="pagination" :url="'music/page'" @get-current-page-data="getCurrentPageData" />
-
+      <Pagination class="pagination" :url="'musicList/page'" :id="lid" @get-current-page-data="getCurrentPageData" />
 
     </div>
 
@@ -70,6 +69,7 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import Pagination from "@/components/Pagination.vue";
 import { ref, reactive } from "vue";
 import request from "@/utils/requests";
+import router from '@/router/index'
 
 //删除的提示框显示
 const open = (scope: any) => {
@@ -101,6 +101,11 @@ const open = (scope: any) => {
 const tableData = reactive([]);//歌曲列表数据
 const currentPage = ref(0);
 const pageSize = ref(0);
+//params
+const route = useRoute()
+console.log(route.params.id );
+
+const lid=ref(Number(route.params.id));
 
 //获取列表信息
 function getCurrentPageData(data: any) {
@@ -144,12 +149,15 @@ function removeMusic(scope: any) {
 }
 
 
-//获取歌单信息
-const route = useRoute(); // 第一步
-console.log(route.query); // 第二步
+// //获取歌单信息
+// const route = useRoute(); // 第一步
+// console.log(route.query); // 第二步
 
-const form = JSON.parse(route.query.data as any)
+
+// const form = JSON.parse(route.query.data as any)
+const form = JSON.parse(window.sessionStorage.getItem('tagUser') as any)
 console.log(form, 6);
+
 
 
 

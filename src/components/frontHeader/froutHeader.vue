@@ -33,49 +33,29 @@
 
 
     <!-- 添加歌单的弹出框 -->
-    <el-dialog v-model="dialogFormVisible" title="Shipping address">
-    <el-form :model="form">
-        
-      <el-form-item label="Promotion name" :label-width="formLabelWidth">
-        <el-input v-model="form.listName" autocomplete="off" />
-      </el-form-item>
-      <el-form-item label="Zones" :label-width="formLabelWidth">
-        <el-select v-model="form.region" placeholder="Please select a zone">
-          <el-option label="Zone No.1" value="shanghai" />
-          <el-option label="Zone No.2" value="beijing" />
-        </el-select>
-      </el-form-item>
-    </el-form>
-    <template #footer>
+    <el-dialog v-model="dialogFormVisible" title="添加歌单">
+
+        <AddList></AddList>
+      
+    <!-- <template #footer>
       <span class="dialog-footer">
         <el-button @click="dialogFormVisible = false">Cancel</el-button>
         <el-button type="primary" @click="dialogFormVisible = false">
           Confirm
         </el-button>
       </span>
-    </template>
+    </template> -->
   </el-dialog>
 </template>
 
 <script setup lang="ts">
 import { ArrowDown } from '@element-plus/icons-vue'
-import { reactive, ref } from 'vue'
+import { ref } from 'vue'
+import AddList from '@/views/Fronts/Add/AddList.vue'
 
 //是否显示弹出框响应式值
 const dialogFormVisible = ref(false)
-const formLabelWidth = '140px'
 
-
-
-
-const form = reactive({
-  listName: '',
-  region: '',
-  delivery: false,
-  type: [],
-  resource: '',
-  desc: '',
-})
 </script>
 
 <style scoped>
@@ -111,11 +91,12 @@ const form = reactive({
 
 .nav .navLeft,
 .nav .navRight {
-    width: 30%;
+    width: 40%;
     /* border: 1px solid; */
     display: flex;
     justify-content: center;
     align-items: center;
+    /* border: 1px solid; */
 }
 
 /* 登录按钮 */

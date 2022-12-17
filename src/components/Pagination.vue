@@ -31,7 +31,10 @@ import { ref } from "vue";
 //子组件接收父组件
 const props = defineProps<{
   url?:String,//请求地址
+  id?:number//歌单id
 }>()
+
+
 
 //子组件传值给父组件
 const emits = defineEmits(['getCurrentPageData'])
@@ -42,6 +45,7 @@ const pageSize = ref(10);
 const small = ref(false);
 const background = ref(false);
 const disabled = ref(false);
+
 
 
 //页数大小
@@ -62,7 +66,8 @@ function getCurrentPage(PN:number,PS:number){
   url:`${props.url}`,
   params:{
     currentPage:PN,
-    pageSize:PS
+    pageSize:PS,
+    lid:props.id
   }
   
 }).then((res)=>{
@@ -71,6 +76,7 @@ function getCurrentPage(PN:number,PS:number){
   let data = {
     pageSize:pageSize.value,
     currentPage:currentPage.value,
+    lid:props.id,
     list:res.data.pageData
   }
   emits('getCurrentPageData',data);

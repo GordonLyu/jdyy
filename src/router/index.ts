@@ -10,7 +10,7 @@ import adminLogin from '@/views/Login/Login.vue'
 import Register from '@/views/Register/Register.vue'
 import musicFrout from '@/views/Fronts/musicFrout.vue'
 import musicPlay from '@/views/Fronts/MusicPlay/musicPlay.vue'
-import musicLIst from '@/views/Fronts/MusicList/musicLIst.vue'
+import musicList from '@/views/Fronts/MusicList/musicList.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -75,8 +75,8 @@ const router = createRouter({
      },
       children:[
         {
-          path:'musicList',
-      name:'musicList',
+          path:'musicList/:id',
+          name:'musicList',
           component: musicList,
           meta:{
             showFooter: false
