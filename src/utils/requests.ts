@@ -1,6 +1,7 @@
 import { ElMessage } from 'element-plus';
 // 对axios进行二次封装
 import axios from 'axios';
+import { getToken } from './token';
 
 // 1. 利用axios对象的方法create，去创建一个axios案例
 // 2. requests就是axios
@@ -13,11 +14,11 @@ const request = axios.create({
 // 请求拦截器：在发送请求之前，请求拦截器可以检测到，在请求发送之前处理一些事情
 request.interceptors.request.use(
     (c) => {
-        const token=sessionStorage.getItem('token')
-        if(token){
+        // const token=sessionStorage.getItem('token')
+        if(getToken()){
             c.headers={
                 ...c.headers,
-                token,
+                "sa-token":getToken(),
             }
         }
 

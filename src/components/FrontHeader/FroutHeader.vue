@@ -7,9 +7,9 @@
 
         </div>
         <div class="navRight">
-            <el-dropdown >
+            <el-dropdown v-if="!loginButton">
                 <span class="el-dropdown-link">
-                    cuanzi
+                  欢迎您，<span>{{username}}</span>
                     <el-icon class="el-icon--right">
                         <arrow-down />
                     </el-icon>
@@ -18,12 +18,12 @@
                     <el-dropdown-menu>
                         <el-dropdown-item @click="dialogFormVisible = true">添加歌单</el-dropdown-item>
                         <el-dropdown-item divided>个人信息</el-dropdown-item>
-                        <el-dropdown-item divided>注销</el-dropdown-item>
+                        <el-dropdown-item divided @click="signout">注销</el-dropdown-item>
                     </el-dropdown-menu>
                 </template>
             </el-dropdown>
-            <span>&nbsp;&nbsp; | &nbsp;&nbsp;</span>
-            <button>
+            <!-- <span>&nbsp;&nbsp; | &nbsp;&nbsp;</span> -->
+            <button v-if="loginButton">
                 <router-link to="/login">登录</router-link>
             </button>
 
@@ -54,8 +54,31 @@ import { ArrowDown } from '@element-plus/icons-vue'
 import { ref } from 'vue'
 import AddList from '@/views/Fronts/Add/AddList.vue'
 
+
+import { useUserInfoStore } from '@/stores/user-info'
+import { removeToken } from '@/utils/token/index'
+
+
 //是否显示弹出框响应式值
 const dialogFormVisible = ref(false)
+
+
+
+const username = useUserInfoStore().username
+
+const loginButton = ref(username=='未登录')
+
+    // ↓登出
+    const signout = () => {
+      // ↓将store重置为初始值
+      useUserInfoStore().$reset()
+      // ↓删除token
+      removeToken()
+      // ↓用router.push或replace会缓存页面，比如由admin切换到普通用户，普通用户在没刷新页面之前仍能看到admin才有权限的页面
+      window.location.href = '/'
+      // router.push('/login')
+    }
+
 
 </script>
 

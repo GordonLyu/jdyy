@@ -20,14 +20,20 @@
                         </div>
 
                     </div>
+                            <div v-for="(item,index) in smallItem" 
+                                :item="item" 
+                                :index="index" 
+                                :key="item.lid" 
+                                @click='toMusicListUrl("musicList",item,item.lid)'
+                            >
+                                <strong class="fa-user-plus" style="font-weight: lighter;"><span>&nbsp;{{ item.creator }}</span></strong>
+                                <img :src="`http://localhost:8080/${item.cover}`" >
+                                <p>
+                                    <icon class="fa-music"></icon>&nbsp; {{ item.listName }}
+                                </p>
+                            </div>
                     
-                    <div v-for="item in smallItem" :key="item.lid" @click='toUrl("musicList",item,item.lid)'>
-                        <strong class="fa-user-plus" style="font-weight: lighter;"><span>&nbsp;{{ item.creator }}</span></strong>
-                        <img :src="`http://localhost:8080/${item.cover}`" >
-                        <p>
-                            <icon class="fa-music"></icon>&nbsp; {{ item.listName }}
-                        </p>
-                    </div>
+                   
 
                 </div>
 
@@ -38,8 +44,14 @@
 
             <div class="RankingList">
                 <h1>热门榜单</h1>
-                <div class="item" v-for="item in dataList" :key="item.musicId" @click='toUrl("musicPlay",item)'>
-                    <div class="rank">{{ item.musicId }}</div>
+                <div class="item" 
+                        v-for="(item,index) in rankItem" 
+                        :item="item" 
+                        :index="index"  
+                        :key="item.musicId" 
+                        @click='toMuiscUrl("musicPlay",item)'
+                >
+                    <div class="rank">{{index+1}}</div>
                     <div class="picture"  >
                         <img :src="`http://localhost:8080/${item.coverURL}`">
                     </div>
@@ -47,9 +59,45 @@
                         <span>{{ item.musicName }}</span><span>&nbsp;- {{ item.author }}</span>
                     </div>
                     <div class="clickNum">
-                        点击数：<span>{{ item.click_number }}</span>
+                        点击数：<span>{{ item.clickNumber }}</span>
                     </div>
                 </div>
+
+                <h1>推荐音乐 
+                    <el-icon @click="ClickRefresh" class="refresh">
+                        <Refresh />
+                    </el-icon>
+                </h1>
+                <el-skeleton :rows="5" animated :loading="loading"  style="margin: 1rem 0;">
+                    <template #template>
+                       
+                    </template>
+                    <template #default>
+
+                        <div class="item" 
+                                v-for="(item,index) in recommendedMusicList" 
+                                :item="item" 
+                                :index="index"  
+                                :key="index" 
+                                @click='toMuiscUrl("musicPlay",item)'
+                        >
+                            <div class="rank">{{index+1}}</div>
+                            <div class="picture"  >
+                                <img :src="`http://localhost:8080/${item.coverURL}`" >
+                            </div>
+                            <div class="author">
+                                <span>{{ item.musicName }}</span><span>&nbsp;- {{ item.author }}</span>
+                            </div>
+                            <div class="clickNum">
+                                点击数：<span>{{ item.clickNumber }}</span>
+                            </div>
+                        </div>
+
+                    </template>
+                </el-skeleton>
+                
+
+
 
             </div>
 
@@ -65,18 +113,23 @@
 import router from '@/router/index'
 import Pagination from "@/components/Pagination.vue";
 import { ref, reactive } from "vue";
+import {Refresh} from '@element-plus/icons-vue'
 
 
-
+const recommendedMusicList:any[]=reactive([]);
 const tableData = reactive([]);//歌曲列表数据
-const currentPage = ref(0);
-const pageSize = ref(0);
+const currentPage = ref(0);//分页的当前页数
+const pageSize = ref(0);//分页的当前页数据量
+const loading=ref(true)//懒加载
 //大封面的数据
 let smallItem: any = [];
 smallItem=tableData
 
+
+
+
 //获取列表信息
- function getCurrentPageData(data: any) {
+const getCurrentPageData=(data: any)=> {
   tableData.splice(0, tableData.length);
   currentPage.value = data.currentPage;
   pageSize.value = data.pageSize;
@@ -87,29 +140,71 @@ smallItem=tableData
  
 }
 
-
-
 //从父组件获取到的榜单数据和歌单数据
 const props = defineProps<{
     dataList: any[],
     listMusic: any[]
 }>()
 
-console.log(props.dataList);
 
+
+//随机获取推荐音乐
+const getMusicData=()=>{
+    let dataNumber=props.dataList.length//音乐数据量
+    for (let i = 0; i < 5; i++) {
+        const randomNumber = Math.floor(Math.random()*dataNumber);
+         recommendedMusicList.push(props.dataList[randomNumber]);//根据随机数随机获取音乐
+    }
+    console.log(recommendedMusicList);
+    
+    // x.classList.remove('active')
+}
+
+//随机获取推荐音乐
+//骨架屏加载
+    loading.value = true
+setTimeout(() => {
+    loading.value = false
+    getMusicData();
+}, 1000);
+
+
+
+//点击刷新推荐歌单
+const ClickRefresh=()=>{
+
+    //骨架屏加载
+    loading.value = true
+  setTimeout(() => {
+    loading.value = false
+  }, 1000)
+    let e= document.querySelectorAll('.refresh')[0]//点击刷新控件
+
+    recommendedMusicList.splice(0,5)
+    e.classList.add('active')
+    //随机获取推荐音乐
+    getMusicData();
+
+    setTimeout(() => {
+    e.classList.remove('active')
+    }, 1000);
+}
 
 //大封面的数据
 let firstItem: any = [];
 firstItem.push(props.listMusic[0]);
 
+//榜单数据取点击数前五
+const rankItem:any[]=props.dataList.sort((a,b)=>b.clickNumber-a.clickNumber).splice(0,5);
 
 
-function toUrl(url: string, data:any,id?:number) {
-    
+
+//点击跳转音乐页面
+const toMuiscUrl=(url: string, data:any,id?:number)=> {
     // let obj = JSON.stringify(data)
     console.log(data);
-    
-    window.sessionStorage.setItem("tagUser", JSON.stringify(data));
+    //本地存储
+    window.sessionStorage.setItem("MusicData", JSON.stringify(data));
     router.push(
         {
             name: url,
@@ -122,9 +217,54 @@ function toUrl(url: string, data:any,id?:number) {
 }
 
 
+//点击跳转歌单页面
+const toMusicListUrl=(url: string, data:any,id?:number)=> {
+    // let obj = JSON.stringify(data)
+    console.log(data);
+    //本地存储
+    window.sessionStorage.setItem("MusicListData", JSON.stringify(data));
+    router.push(
+        {
+            name: url,
+            params: {
+                id:id,
+            }
+        }
+    )
+ 
+}
+
+
+
 </script>
 
 <style scoped>
+*{
+    transition: all .5s;
+}
+.el-icon{
+    margin-left: 1rem;
+    cursor: pointer;
+}
+.el-icon.active{
+
+    animation: rotate 5s cubic-bezier(0.075, 0.82, 0.165, 1) ;
+}
+
+@keyframes rotate{
+    0%{
+        transform: rotate(0deg);
+    }
+    100%{
+        transform: rotate(360deg);
+    }
+}
+
+h1:nth-of-type(2){
+    margin: 1rem 0;
+    display: flex;
+    align-items: center;
+}
 
 #seation {
 
@@ -136,7 +276,7 @@ function toUrl(url: string, data:any,id?:number) {
     position: relative;
     /* margin-top: 46rem; */
     overflow: hidden;
-
+    padding-bottom: 2rem;
 }
 
 #seation>div {

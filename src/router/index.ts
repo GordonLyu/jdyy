@@ -12,6 +12,11 @@ import MusicFrout from '@/views/Fronts/MusicFrout.vue'
 import musicPlay from '@/views/Fronts/MusicPlay/MusicPlay.vue'
 import musicList from '@/views/Fronts/MusicList/MusicList.vue'
 
+import NProgress from '@/utils/progress'
+import { existToken, removeToken } from '@/utils/token/index'
+import { useUserInfoStore } from '@/stores/user-info'
+import { ElMessage } from "element-plus";
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -114,13 +119,59 @@ const router = createRouter({
   ]
 })
 
-//前置路由守卫
-router.beforeEach((to, from, next) => {
-  //后台管理标题
+// //前置路由守卫
+// router.beforeEach((to, from, next) => {
+//   //后台管理标题
+//   document.title = "Vite App";
+//   if(to.matched[0].path=='/admin')
+//     document.title ="后台 | "+to.meta.title;
+//   next()
+// })
+
+
+// ↓白名单
+const whiteList = ['/login','/musicFrout']
+
+// ↓全局前置守卫
+router.beforeEach(async (to) => {
+  console.log(to);
+  const userInfoStore = useUserInfoStore()
+  NProgress.start()
+    //后台管理标题
   document.title = "Vite App";
-  if(to.matched[0].path=='/admin')
-    document.title ="后台 | "+to.meta.title;
-  next()
+  if(to.matched[0].path=='/admin'){
+       document.title ="后台 | "+to.meta.title;
+    }
+   
+  // ↓如果请求地址不是白名单
+  if (whiteList.indexOf(to.path) === -1) {
+    // ↓如果token存在检查store，否则跳转到登录页
+    if (existToken()) {
+      // ↓如果没有用户信息，查询用户信息
+      if (userInfoStore.username=='未登录') {
+        // ↓查询成功保存用户信息且跳转到目标页
+          removeToken()
+          return { name: 'adminLogin', query: { redirect: `${to.path}` } }
+      }
+    }else{
+      ElMessage.error("^_^登录后即享权益！")
+      return { name: 'adminLogin', query: { redirect: `${to.path}` } }
+    }
+    if(to.path=='/admin'){
+      if (userInfoStore.role=='admin') {
+        ElMessage.success("欢迎您，管理员")
+      }else{
+        ElMessage.error("权限不足！！！")
+        return { name: 'musicFrout', query: { redirect: `${to.path}` } }
+      }
+    }
+  }
 })
+
+// ↓全局后置钩子
+router.afterEach(() => {
+  NProgress.done()
+})
+
 
 export default router
