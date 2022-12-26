@@ -34,10 +34,13 @@ let ListData:any=ref([]);
 //歌单
 let musicList:any=ref([]);
 
+
+
 //获取所有歌单
 getAllList();
 //获取所有音乐
 getAllMusic();
+
 async function getAllMusic(){ 
 await request({
   url:'/music/getAll',

@@ -10,7 +10,7 @@
   <div class="right">
     <el-dropdown>
       <span class="el-dropdown-link">
-        <span> 你好，管理员 </span>
+        <span> 您好，{{username}} </span>
         <el-icon class="el-icon--right">
           <Avatar></Avatar>
         </el-icon>
@@ -19,7 +19,7 @@
         <el-dropdown-menu>
           <el-dropdown-item>个人信息</el-dropdown-item>
           <el-dropdown-item>设置</el-dropdown-item>
-          <el-dropdown-item>注销</el-dropdown-item>
+          <el-dropdown-item @click="signout">注销</el-dropdown-item>
         </el-dropdown-menu>
       </template>
     </el-dropdown>
@@ -31,6 +31,8 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { ArrowLeft } from "@element-plus/icons-vue";
 import Avatar from "@/components/Avatar.vue";
+import { useUserInfoStore } from '@/stores/user-info'
+import { removeToken } from '@/utils/token/index'
 
 const router = useRouter();
 // console.log(router.currentRoute.value.matched);
@@ -43,6 +45,20 @@ router.afterEach((to) => {
     routers.value.push(item);
   });
 });
+
+//用户状态
+const username = useUserInfoStore().username
+
+    // ↓登出
+    const signout = () => {
+      // ↓将store重置为初始值
+      useUserInfoStore().$reset()
+      // ↓删除token
+      removeToken()
+      // ↓用router.push或replace会缓存页面，比如由admin切换到普通用户，普通用户在没刷新页面之前仍能看到admin才有权限的页面
+      window.location.href = '/'
+      // router.push('/login')
+    }
 </script>
 
 <style scoped>

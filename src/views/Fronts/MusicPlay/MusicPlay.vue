@@ -77,12 +77,13 @@
         </div>
 
     </div>
+    
 
 </template>
-
 <script>
 import { Howl } from 'howler'
-import {toRaw} from 'vue'
+
+import Remark from '@/components/Remark/Remark.vue'
 
 export default {
     name: 'video-test',
@@ -131,7 +132,7 @@ export default {
                 onload() {
                     console.log('onload!', this);
                     console.log(that);
-                    const form = JSON.parse(window.sessionStorage.getItem('tagUser'))
+                    const form = JSON.parse(window.sessionStorage.getItem('MusicData'))
                     console.log(form.url);
                     that.audioSrc.push(
                         "http://localhost:8080/"+form.url
@@ -336,13 +337,17 @@ export default {
     height: 40rem;
     // border: 1px solid;
     display: flex;
-    justify-content: space-evenly;
+    justify-content: space-around;
     align-items: center;
+    flex-wrap: wrap;
 }
 
 .cover .image {
-    width: 35%;
+    // width: 35%;
+    // flex: 1;
     // border: 1px solid;
+    min-width: 10rem;
+    margin-top: 2rem;
 }
 
 // 唱片动画
@@ -370,13 +375,15 @@ export default {
 }
 
 .cover .message {
-    width: 35%;
-    height: 20rem;
+    // width: 35%;
+    height: 15rem;
     // border: 1px solid;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    // flex: 1;
+    min-width: 10rem;
 }
 
 .cover .message h1 {
@@ -423,6 +430,9 @@ export default {
     justify-content: space-around;
 
 }
+.player>button{
+    margin: 0 1rem;
+}
 
 .player button,
 .finally button,
@@ -455,14 +465,28 @@ export default {
     justify-content: center;
     align-items: center;
     padding: 0 1rem;
+    position: relative;
 }
 
 .volume input {
     // position: absolute;
-    left: -50%;
-    top: -100%;
+    // top: -3rem;
+    // transform: rotate(270deg);
+    // margin-left: 1rem;
+    // display: none;
     margin-left: 1rem;
-
+}
+@media screen and (max-width:938px) {
+    .volume input {
+        position: absolute;
+        top: -3rem;
+        transform: rotate(270deg);
+        margin-left: 0rem;
+        display: none;
+    }
+    .volume:hover input{
+        display: block;
+    }
 }
 
 //音量条
@@ -544,6 +568,6 @@ select option {
 
 
 .progress input {
-    width: 85%;
+    width: 100%;
 }
 </style>

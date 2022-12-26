@@ -4,8 +4,8 @@
       <el-input v-model="formLabelAlign.listName" size="large" />
     </el-form-item>
     <el-form-item label="作者">
-      <el-input v-model="formLabelAlign.creator" maxlength="6" placeholder="最多6位字符" show-word-limit
-        type="text" />
+      <el-input v-model="formLabelAlign.creator" maxlength="10" placeholder="最多10位字符" show-word-limit type="text" aria-disabled/>
+      <el-tag @click="clickSelect" type="success" style="cursor: pointer; margin-top: 5px;">当前用户：{{userInfoStore.username}}</el-tag>
     </el-form-item>
     <el-form-item label="封面">
       <Upload @get-file="getCoverFile" is-img is-cropper ref="uploadImgRef"></Upload>
@@ -25,16 +25,22 @@ import request from "@/utils/requests";
 import Upload from "@/components/Upload";
 import { ElMessage } from "element-plus";
 import { reactive, ref } from "vue";
+import { useUserInfoStore } from '@/stores/user-info'
+
+// pinia状态
+const userInfoStore = useUserInfoStore()
 
 const formData = new FormData();
 const formLabelAlign = reactive({
   listName: "",
-  creator: "",//作者
+  creator: userInfoStore.username,//作者
   detail: ""//简介
 });
 
 
 const uploadImgRef = ref();
+
+
 
 // //解决 'for in' 遍历，获取值时 ts报错问题
 const isValidKey = (
@@ -50,7 +56,10 @@ const getCoverFile = (file: any) => {
 
   formData.set("coverFile", file);
 };
-
+// 点击el-tag进行选择该标签的值
+const clickSelect=()=>{
+  formLabelAlign.creator=userInfoStore.username
+}
 
 const submit = () => {
   for (let key in formLabelAlign) {

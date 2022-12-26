@@ -23,10 +23,11 @@
             <p class="createTime"> 创建时间：{{ form.createTime }}</p>
           </div>
           <div class="btn">
-            <button>
+            <button  @click="dialogFormVisible = true">
               <el-icon>
                 <Plus />
-              </el-icon>添加
+              </el-icon>
+              <span>添加</span>
             </button>
           </div>
           <p style="color:var(--color-white);">简介:</p>
@@ -40,9 +41,9 @@
         <el-table-column prop="author" label="作者" />
         <el-table-column label="操作">
           <template #default="scope">
-            <el-button type="primary"
-              style="font-family:FontAwesome; background-color: transparent; border: none;"><span class="fa-play"
-                style="color:#3f8ff2;"></span></el-button>
+            <el-button @click='toMuiscUrl("musicPlay",scope.row)' type="primary" style="font-family:FontAwesome; background-color: transparent; border: none;">
+              <span class="fa-play" style="color:#3f8ff2;"></span>
+            </el-button>
             <el-button text style="background-color: transparent; border: none;" @click="open(scope)">
               <el-icon>
                 <Delete />
@@ -59,6 +60,20 @@
 
 
 
+ <!-- 添加音乐的弹出框 -->
+ <el-dialog v-model="dialogFormVisible"  title="添加音乐">
+
+    <AddMusic :ListId="listId" @dialogFormHidden="addMusicAfter"></AddMusic>
+
+<!-- <template #footer>
+<span class="dialog-footer">
+<el-button @click="dialogFormVisible = false">Cancel</el-button>
+<el-button type="primary" @click="dialogFormVisible = false">
+  Confirm
+</el-button>
+</span>
+</template> -->
+</el-dialog>
 
 </template>
 
@@ -71,30 +86,34 @@ import Pagination from "@/components/Pagination.vue";
 import { ref, reactive } from "vue";
 import request from "@/utils/requests";
 import router from '@/router/index'
+import AddMusic from '@/views/Fronts/Add/AddMusic.vue'
+
+//是否显示弹出框响应式值
+const dialogFormVisible = ref(false)
 
 //删除的提示框显示
 const open = (scope: any) => {
 
   ElMessageBox.confirm(
-    'proxy will permanently delete the file. Continue?',
+    '您确定要删除此歌曲?',
     'Warning',
     {
-      confirmButtonText: 'OK',
-      cancelButtonText: 'Cancel',
+      confirmButtonText: '好的',
+      cancelButtonText: '取消',
       type: 'warning',
     }
   )
     .then(() => {
       ElMessage({
         type: 'success',
-        message: 'Delete completed',
+        message: '删除成功',
       })
       removeMusic(scope);
     })
     .catch(() => {
       ElMessage({
         type: 'info',
-        message: 'Delete canceled',
+        message: '删除失败',
       })
     })
 }
@@ -102,14 +121,19 @@ const open = (scope: any) => {
 const tableData = reactive([]);//歌曲列表数据
 const currentPage = ref(0);
 const pageSize = ref(0);
-//params
+
+
+//获取当前歌单的id
 const route = useRoute()
-console.log(route.params.id );
+console.log(route.params.id);
+let listId:any=route.params.id
+
+
 
 const lid=ref(Number(route.params.id));
 
 //获取列表信息
-function getCurrentPageData(data: any) {
+const getCurrentPageData=(data: any)=> {
   tableData.splice(0, tableData.length);
   currentPage.value = data.currentPage;
   pageSize.value = data.pageSize;
@@ -119,36 +143,68 @@ function getCurrentPageData(data: any) {
   });
 }
 
-function removeMusic(scope: any) {
+
+//添加音乐后的更新操作
+const addMusicAfter=(hidden:boolean)=>{
+  dialogFormVisible.value = hidden
+  console.log("来啦来啦！！！！");
+  //重新获取数据
+  getDataAgain();
+
+}
+
+const removeMusic=(scope: any)=> {
   //弹出框隐藏
   console.log(scope.$index, scope.row.musicId);
   // tableData.splice(scope.$index, 1);
   request({
     method: "delete",
-    url: "music/remove",
+    url: "musicList/removeMusic",
     params: {
-      musicId: scope.row.musicId,
+      mid: scope.row.musicId,
+      lid:listId
     },
   }).then((res) => {
     //删除后重新获取数据
-    request({
+    getDataAgain();
+  });
+}
+
+//重新获取数据函数
+const getDataAgain=()=>{
+  
+  
+  request({
       method: "get",
-      url: "music/page",
+      url: "musicList/page",
       params: {
         currentPage: currentPage.value,
         pageSize: pageSize.value,
+        lid:listId
       },
     }).then((res) => {
+      console.log(res.data);
+      
       tableData.splice(0, tableData.length);
       res.data.pageData.forEach((value: never) => {
         tableData.push(value);
       });
     });
-
-    console.log(res);
-  });
 }
 
+//点击跳转页面
+const toMuiscUrl=(url: string, data:any)=> {
+    // let obj = JSON.stringify(data)
+    console.log(data);
+    //本地存储
+    window.sessionStorage.setItem("MusicData", JSON.stringify(data));
+    router.push(
+        {
+            name: url,
+        }
+    )
+ 
+}
 
 // //获取歌单信息
 // const route = useRoute(); // 第一步
@@ -156,7 +212,8 @@ function removeMusic(scope: any) {
 
 
 // const form = JSON.parse(route.query.data as any)
-const form = JSON.parse(window.sessionStorage.getItem('tagUser') as any)
+//获取存储本地信息
+const form = JSON.parse(window.sessionStorage.getItem('MusicListData') as any)
 console.log(form, 6);
 
 
@@ -191,6 +248,7 @@ console.log(form, 6);
   /* border: 1px solid rgba(255, 255, 255, 0.18); */
   /* 优化高斯模糊 */
   transform: translateZ(0);
+
 }
 
 /* 背景圆*/
@@ -292,6 +350,7 @@ console.log(form, 6);
   width: 50%;
   height: 90%;
   /* border: 1px solid; */
+  margin-right: 1rem;
 }
 
 /* 歌曲名字 */
@@ -308,7 +367,7 @@ console.log(form, 6);
   display: flex;
   /* border: 1px solid; */
 }
-
+/* 歌单信息 */
 .message .boxMessage .creator p {
   height: 100%;
   /* border: 1px solid; */
@@ -319,6 +378,7 @@ console.log(form, 6);
   align-items: center;
   cursor: pointer;
 }
+
 
 .message .boxMessage .creator p:nth-of-type(1) {
 
@@ -347,7 +407,7 @@ console.log(form, 6);
   margin: 0 .5rem .5rem 1rem;
   display: flex;
   align-items: center;
-
+  /* font-size: 1vw; */
 }
 
 .message .boxMessage .btn button {
@@ -372,6 +432,17 @@ console.log(form, 6);
   /* 优化高斯模糊 */
   transform: translateZ(0);
   box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+}
+
+@media screen and (max-width:851px) {
+  .message .boxMessage .btn button span {
+    display: none;
+  }
+  /* 创建时间 */
+  .message .boxMessage .creator .createTime{
+      display: none;
+  }
+
 }
 
 

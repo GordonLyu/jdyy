@@ -55,28 +55,14 @@ import card from "@/components/Card/Card.vue";
 import { User, Lock } from "@element-plus/icons-vue";
 import { ElMessage } from "element-plus";
 import { doLogin } from '@/api/login';
-import useUserStore from "@/stores/user"
 
-const userData = reactive({
-  username: '',
-  password: '',
-})
+import { setToken } from '@/utils/token/index'
+import { useRouter } from 'vue-router'
 
 
-// 实例化 store
-const userStore = useUserStore()
+import { useUserInfoStore } from '@/stores/user-info'
+const router = useRouter()
 
-const onLogin = async () => {
-  // 使用 actions，当作函数一样直接调用
-  // login action 定义为了 async 函数，所以它返回一个 Promise
-  await userStore.login(ruleForm);
-  userData.username = ''
-  userData.password = ''
-}
-
-const onLogout = () => {
-  userStore.logout()
-}
 
 
 
@@ -105,10 +91,27 @@ const submitForm = (formEl: FormInstance | undefined) => {
         if (valid) {
             console.log(ruleForm);
             
-           doLogin(JSON.stringify(ruleForm)).then(res=>{
+           doLogin(JSON.stringify(ruleForm)).then((res:any)=>{
             console.log(res.code);
             if(res.code===200){
                 ElMessage.success("登录成功")
+                // ↓保存token
+                console.log(res.data);
+                
+                setToken(res.data.token.tokenValue)
+
+                // ↓从store获取用户信息
+                const userInfoStore = useUserInfoStore()
+                //设置用户状态数据
+                userInfoStore.setAll(res.data.user)
+
+                if(userInfoStore.role=='admin'){
+                    router.push('/admin')
+                }else{
+                    router.push('/')
+                }
+                
+                
                 
 
             }else if(res.code===404){

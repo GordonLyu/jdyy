@@ -5,7 +5,7 @@
     flex
     v-model:current-page="currentPage"
     v-model:page-size="pageSize"
-    :page-sizes="[10, 15, 20, 50, 100]"
+    :page-sizes="[8, 15, 20, 50, 100]"
     :small="small"
     :disabled="disabled"
     :background="props.background"
@@ -49,7 +49,7 @@ const emits = defineEmits(["getCurrentPageData"]);
 
 const total = ref(0);
 const currentPage = ref(1);
-const pageSize = ref(10);
+const pageSize = ref(8);
 const small = ref(false);
 const disabled = ref(false);
 
@@ -65,7 +65,7 @@ const handleCurrentChange = (val: number) => {
   getCurrentPage(val, pageSize.value);
 };
 
-getCurrentPage(1, 10);
+getCurrentPage(1, 8);
 
 //获取当前页的数据
 function getCurrentPage(PN: number, PS: number) {
@@ -83,7 +83,7 @@ function getCurrentPage(PN: number, PS: number) {
     let data = {
       pageSize: pageSize.value,
       currentPage: currentPage.value,
-    lid:props.id,
+      lid:props.id,
       list: res.data.pageData,
     };
     emits("getCurrentPageData", data);
