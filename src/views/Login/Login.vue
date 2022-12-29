@@ -17,7 +17,7 @@
                     <!-- 密码 -->
                     <el-form-item prop="password">
                         <el-input v-model="ruleForm.password" class="w-50 m-2" size="large" type="password"
-                            placeholder="密码">
+                            placeholder="密码" show-password>
                             <template #prefix>
                                 <el-icon class="el-input__icon">
                                     <Lock />
@@ -28,7 +28,7 @@
 
                     <!-- 记住我 -->
                 <el-form-item prop="type">
-                    <el-checkbox label="记住密码" name="type"></el-checkbox>
+                    <el-checkbox v-model="isSelect" label="记住密码" name="type" @change="checkBoxEvent"></el-checkbox>
                 </el-form-item>
 
 
@@ -49,12 +49,15 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref } from 'vue'
+import { reactive, ref,onMounted } from 'vue'
 import type { FormInstance } from 'element-plus'
 import card from "@/components/Card/Card.vue";
 import { User, Lock } from "@element-plus/icons-vue";
 import { ElMessage } from "element-plus";
 import { doLogin } from '@/api/login';
+import Cookies from 'js-cookie'
+import {encode,decode} from 'js-base64'
+
 
 import { setToken } from '@/utils/token/index'
 import { useRouter } from 'vue-router'
@@ -62,7 +65,33 @@ import { useRouter } from 'vue-router'
 
 import { useUserInfoStore } from '@/stores/user-info'
 const router = useRouter()
+const isSelect=ref(false)//记住密码是否选中
 
+function checkBoxEvent(){
+    console.log(isSelect.value,"复选框");
+
+}
+
+onMounted(()=>{
+    queryLocalForm()
+})
+
+//查看是否有记住密码的存储
+const queryLocalForm = () => {
+  const localForm = Cookies.get('LOCAL_KEY')
+  if (localForm) {
+    isSelect.value = true
+    try {
+      const { username, password } = JSON.parse(localForm)
+      ruleForm.username = decode(username)
+      ruleForm.password = decode(password)
+    } catch (error) {
+      console.error('本地数据解析失败~', error)
+    }
+  } else {
+    isSelect.value = false
+  }
+}
 
 
 
@@ -71,6 +100,7 @@ const ruleFormRef = ref<FormInstance>()
 const ruleForm = reactive({
     username: '',
     password: '',
+    select:''
 })
 
 const rules = reactive({
@@ -89,8 +119,35 @@ const submitForm = (formEl: FormInstance | undefined) => {
     if (!formEl) return
     formEl.validate((valid) => {
         if (valid) {
-            console.log(ruleForm);
-            
+            console.log(ruleForm,'@@@@@@@');
+
+            // 是否记住密码功能
+
+            // 转码
+            const { username, password} = ruleForm
+            const params = {
+            username: encode(username),
+            password: encode(password),
+            }
+        
+            // 检测是否需要记住密码
+            if (isSelect.value) {
+            const { username, password } = params
+            const localForm = {
+                username,
+                password
+            }
+            Cookies.set('LOCAL_KEY', JSON.stringify(localForm))
+            } else {
+            Cookies.remove('LOCAL_KEY')
+            }
+
+
+
+
+        
+            //记住密码功能end
+
            doLogin(JSON.stringify(ruleForm)).then((res:any)=>{
             console.log(res.code);
             if(res.code===200){
@@ -106,13 +163,10 @@ const submitForm = (formEl: FormInstance | undefined) => {
                 userInfoStore.setAll(res.data.user)
 
                 if(userInfoStore.role=='admin'){
-                    router.push('/admin')
+                    window.location.href = '/admin'
                 }else{
-                    router.push('/')
+                    window.location.href = '/'
                 }
-                
-                
-                
 
             }else if(res.code===404){
                 ElMessage.error("用户不存在")

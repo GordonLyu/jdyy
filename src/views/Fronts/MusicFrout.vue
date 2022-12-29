@@ -2,7 +2,10 @@
     <div id="container"  v-if="$route.meta.showFooter">
         <FroutHeader/>
         <FroutSwiper/>
-        <FroutSeation :dataList="ListData" :listMusic="musicList"/>
+        <FroutSeation 
+        :dataList="ListData"
+        :listMusic="musicList" 
+        /> 
     </div>
     <RouterView v-else/>
 </template>
@@ -21,6 +24,14 @@ const FroutHeader = defineAsyncComponent(() => import('@/components/FrontHeader/
 const FroutSwiper = defineAsyncComponent(() => import('@/components/FrontSwiper/FrontSwiper.vue'))
 const FroutSeation = defineAsyncComponent(() => import('@/components/FrontSeation/FrontSeation.vue'))
 
+//删除歌单后的操作
+// function musicListDeleteAfter(flag:any){
+//     console.log("接受信号成功！",flag);
+//     //获取所有歌单
+//     getAllList();
+    
+// }
+
 //榜单
 let data:any = reactive({
     value:[],
@@ -33,7 +44,6 @@ let data1:any = reactive({
 let ListData:any=ref([]);
 //歌单
 let musicList:any=ref([]);
-
 
 
 //获取所有歌单
@@ -51,31 +61,22 @@ await request({
     console.log(toRaw(ListData.value));
 })
 }
-console.log(toRaw(data.value),6);
+// console.log(toRaw(data.value),6);
 
 
 //获取所有歌单
-async function getAllList(){ 
-await request({
+function getAllList(){ 
+request({
   url:'/musicList/getAll',
 }).then((res)=>{
     data1.value.push(...res.data);
-    console.log(res.data,9);
-    musicList.value=toRaw(data1.value);
-    console.log(toRaw(musicList.value));
+    // console.log(res.data,9);
+    musicList.value=res.data;
+    // console.log(toRaw(musicList.value));
+    console.log(musicList.value);
 })
 }
-console.log(toRaw(data.value),6);
-
-
-//向froutSeation传递热歌榜单数据
-
-
-
-
-
-
-
+// console.log(toRaw(data.value),6);
 
 </script>
 

@@ -41,7 +41,7 @@
         <el-table-column prop="author" label="作者" />
         <el-table-column label="操作">
           <template #default="scope">
-            <el-button @click='toMuiscUrl("musicPlay",scope.row)' type="primary" style="font-family:FontAwesome; background-color: transparent; border: none;">
+            <el-button @click='toMuiscUrl("musicPlay",scope.row,scope.row.musicId)' type="primary" style="font-family:FontAwesome; background-color: transparent; border: none;">
               <span class="fa-play" style="color:#3f8ff2;"></span>
             </el-button>
             <el-button text style="background-color: transparent; border: none;" @click="open(scope)">
@@ -91,6 +91,7 @@ import AddMusic from '@/views/Fronts/Add/AddMusic.vue'
 //是否显示弹出框响应式值
 const dialogFormVisible = ref(false)
 
+
 //删除的提示框显示
 const open = (scope: any) => {
 
@@ -108,6 +109,7 @@ const open = (scope: any) => {
         type: 'success',
         message: '删除成功',
       })
+      
       removeMusic(scope);
     })
     .catch(() => {
@@ -131,6 +133,8 @@ let listId:any=route.params.id
 
 
 const lid=ref(Number(route.params.id));
+
+
 
 //获取列表信息
 const getCurrentPageData=(data: any)=> {
@@ -165,6 +169,7 @@ const removeMusic=(scope: any)=> {
       lid:listId
     },
   }).then((res) => {
+    // location.reload()
     //删除后重新获取数据
     getDataAgain();
   });
@@ -172,8 +177,6 @@ const removeMusic=(scope: any)=> {
 
 //重新获取数据函数
 const getDataAgain=()=>{
-  
-  
   request({
       method: "get",
       url: "musicList/page",
@@ -193,7 +196,7 @@ const getDataAgain=()=>{
 }
 
 //点击跳转页面
-const toMuiscUrl=(url: string, data:any)=> {
+const toMuiscUrl=(url: string, data:any,id:number)=> {
     // let obj = JSON.stringify(data)
     console.log(data);
     //本地存储
@@ -201,6 +204,9 @@ const toMuiscUrl=(url: string, data:any)=> {
     router.push(
         {
             name: url,
+            params: {
+                id:id,
+            }
         }
     )
  

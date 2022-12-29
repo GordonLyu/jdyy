@@ -13,6 +13,7 @@ import './assets/main.css'
 
 const app = createApp(App)
 
+
 app.use(pinia)
     .use(router)
     .use(vueAxios,axios,Qs)

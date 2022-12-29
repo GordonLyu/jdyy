@@ -101,6 +101,7 @@ const submit =  () => {
         message: res.message,
         grouping: true,
       });
+      // location.reload()
         //给父组件传值
       emit('dialogFormHidden',hidden)
     } else {

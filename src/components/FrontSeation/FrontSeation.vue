@@ -23,14 +23,31 @@
                             <div v-for="(item,index) in smallItem" 
                                 :item="item" 
                                 :index="index" 
-                                :key="item.lid" 
-                                @click='toMusicListUrl("musicList",item,item.lid)'
+                                :key="item.lid"
                             >
                                 <strong class="fa-user-plus" style="font-weight: lighter;"><span>&nbsp;{{ item.creator }}</span></strong>
-                                <img :src="`http://localhost:8080/${item.cover}`" >
-                                <p>
-                                    <icon class="fa-music"></icon>&nbsp; {{ item.listName }}
+                                <img :src="`http://localhost:8080/${item.cover}`" @click='toMusicListUrl("musicList",item,item.lid)'>
+                                <p style="display: flex; justify-content: space-between;">
+                                    <icon class="fa-music">&nbsp; {{ item.listName }}</icon>
+
+
+
+                                    <el-popconfirm
+                                        confirm-button-text="是的"
+                                        cancel-button-text="取消"
+                                        title="确定要删除?"
+                                        @confirm="confirmEvent(item.lid)"
+                                        @cancel="cancelEvent"
+                                    >
+                                        <template #reference>
+                                        <el-icon style="margin-right: .5rem;" v-if="deleteShow"><Delete/></el-icon>
+                                        </template>
+                                    </el-popconfirm>
+
+
+                                    
                                 </p>
+                                
                             </div>
                     
                    
@@ -49,7 +66,7 @@
                         :item="item" 
                         :index="index"  
                         :key="item.musicId" 
-                        @click='toMuiscUrl("musicPlay",item)'
+                        @click='toMuiscUrl("musicPlay",item,item.musicId)'
                 >
                     <div class="rank">{{index+1}}</div>
                     <div class="picture"  >
@@ -79,7 +96,7 @@
                                 :item="item" 
                                 :index="index"  
                                 :key="index" 
-                                @click='toMuiscUrl("musicPlay",item)'
+                                @click='toMuiscUrl("musicPlay",item,item.musicId)'
                         >
                             <div class="rank">{{index+1}}</div>
                             <div class="picture"  >
@@ -112,18 +129,77 @@
 <script setup lang="ts">
 import router from '@/router/index'
 import Pagination from "@/components/Pagination.vue";
-import { ref, reactive } from "vue";
-import {Refresh} from '@element-plus/icons-vue'
+import { ref, reactive, onBeforeMount, onMounted } from "vue";
+import {Refresh,Delete} from '@element-plus/icons-vue'
+import request from "@/utils/requests";
+import { ElMessage } from "element-plus";
+import { useUserInfoStore } from '@/stores/user-info'
+import emitter from '@/utils/bus/bus'
 
+const username = useUserInfoStore().username//当前的登录状态
 
 const recommendedMusicList:any[]=reactive([]);
-const tableData = reactive([]);//歌曲列表数据
+const tableData = reactive([]);//歌单列表数据
 const currentPage = ref(0);//分页的当前页数
 const pageSize = ref(0);//分页的当前页数据量
 const loading=ref(true)//懒加载
-//大封面的数据
-let smallItem: any = [];
-smallItem=tableData
+const deleteShow=ref(username=='未登录'?false:true)//歌单删除的显隐（未登录时消失）
+//歌单列表数据
+let smallItem: any = ref([]);
+smallItem.value=tableData
+
+
+//取消删除函数
+const cancelEvent=()=>{
+console.log("取消删除！");
+
+}
+//确认删除函数
+const confirmEvent= (lid:any)=>{
+    console.log("删除的歌单id为",lid);
+     
+    request({
+    method: "delete",
+    url: "musicList/remove",
+    params: {
+      lid:lid
+    },
+  }).then((res:any) => {
+    if (res.code == 200) {
+      ElMessage.success({
+        message: res.message,
+        grouping: true,
+      });
+      location.reload()
+      //给父组件传值
+    // emit('musicListDelete',updateMusicList)
+    getListPage()
+    console.log("删除成功！");
+    }
+  });
+ 
+ 
+   
+    
+
+}
+
+//tmp-------
+ function getListPage(){ 
+    request({
+    url:'/musicList/pageList',
+    params:{
+        currentPage:currentPage.value,
+        pageSize:pageSize.value
+    }
+    }).then((res)=>{
+        console.log("这");
+        console.log("@",currentPage.value,pageSize.value);
+        smallItem.value = res.data.pageData
+        console.log(res.data);
+    })
+}
+//tmp-------
 
 
 
@@ -133,12 +209,27 @@ const getCurrentPageData=(data: any)=> {
   tableData.splice(0, tableData.length);
   currentPage.value = data.currentPage;
   pageSize.value = data.pageSize;
-  console.log(data);
-  data.list.forEach((value: never) => {
-    tableData.push(value);
-  });
+  console.log(data,'@@@');
+  smallItem.value = data.list;
+//   data.list.forEach((value: never) => {
+//     tableData.push(value);
+//   });
  
 }
+
+//接受兄弟组件froutHeader的通讯
+onMounted(() => {
+    emitter.on('addEvent',(res: any) => {
+        console.log("接受信息addEvent"+res);
+        getListPage()
+    });
+})
+//销毁兄弟组件froutHeader的通讯
+onBeforeMount(() => {
+    console.log("销毁信息addEvent");
+    emitter.off('addEvent');
+});
+
 
 //从父组件获取到的榜单数据和歌单数据
 const props = defineProps<{
@@ -151,7 +242,7 @@ const props = defineProps<{
 //随机获取推荐音乐
 const getMusicData=()=>{
     let dataNumber=props.dataList.length//音乐数据量
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 10; i++) {
         const randomNumber = Math.floor(Math.random()*dataNumber);
          recommendedMusicList.push(props.dataList[randomNumber]);//根据随机数随机获取音乐
     }
@@ -179,11 +270,12 @@ const ClickRefresh=()=>{
     loading.value = false
   }, 1000)
     let e= document.querySelectorAll('.refresh')[0]//点击刷新控件
+    recommendedMusicList.splice(0,10)//清空列表
 
-    recommendedMusicList.splice(0,5)
     e.classList.add('active')
     //随机获取推荐音乐
     getMusicData();
+ 
 
     setTimeout(() => {
     e.classList.remove('active')
@@ -194,8 +286,12 @@ const ClickRefresh=()=>{
 let firstItem: any = [];
 firstItem.push(props.listMusic[0]);
 
+let rankData:any[]=[];
+rankData.push(...props.dataList)
+
 //榜单数据取点击数前五
-const rankItem:any[]=props.dataList.sort((a,b)=>b.clickNumber-a.clickNumber).splice(0,5);
+const rankItem:any[]=rankData.sort((a,b)=>b.clickNumber-a.clickNumber).splice(0,5);
+
 
 
 

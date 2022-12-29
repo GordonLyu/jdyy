@@ -27,6 +27,13 @@ import { ElMessage } from "element-plus";
 import { reactive, ref } from "vue";
 import { useUserInfoStore } from '@/stores/user-info'
 
+
+//接受父组件froutHeader发送给frontSeation的信息
+const props = defineProps<{
+    sendMitt: any,
+}>()
+
+
 // pinia状态
 const userInfoStore = useUserInfoStore()
 
@@ -61,7 +68,7 @@ const clickSelect=()=>{
   formLabelAlign.creator=userInfoStore.username
 }
 
-const submit = () => {
+const submit =() => {
   for (let key in formLabelAlign) {
     if (isValidKey(key, formLabelAlign)) {
       formData.set(key, formLabelAlign[key]);
@@ -79,6 +86,7 @@ const submit = () => {
         message: res.message,
         grouping: true,
       });
+      props.sendMitt();//父组件froutHeader发送给frontSeation的信息
     } else {
       ElMessage.warning({
         message: res.message,
