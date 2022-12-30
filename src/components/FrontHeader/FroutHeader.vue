@@ -36,7 +36,7 @@
     <!-- 添加歌单的弹出框 -->
     <el-dialog v-model="dialogFormVisible" title="添加歌单">
 
-        <AddList></AddList>
+        <AddList :sendMitt="sendMitt"></AddList>
       
     <!-- <template #footer>
       <span class="dialog-footer">
@@ -57,6 +57,13 @@ import AddList from '@/views/Fronts/Add/AddList.vue'
 
 import { useUserInfoStore } from '@/stores/user-info'
 import { removeToken } from '@/utils/token/index'
+import emitter from '@/utils/bus/bus'
+
+
+//发送信息给兄弟frontSeation组件
+const sendMitt = () => {
+    emitter.emit('addEvent', true);
+}
 
 
 //是否显示弹出框响应式值

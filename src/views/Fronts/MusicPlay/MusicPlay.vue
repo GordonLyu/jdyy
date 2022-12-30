@@ -9,7 +9,9 @@
         <img src="https://hype4.academy/_next/static/media/ovalShadow.793e2be7.svg" alt="图片迷路了~" style="--x:5">
     </div>
     <div id="player">
-
+        
+       
+        
         <div class="musicList">
 
 
@@ -21,6 +23,7 @@
                 <div class="message">
                     <h1>{{ musicData.musicName }}</h1>
                     <p style="width: max-content;">{{ musicData.author }}</p>
+                  
                 </div>
 
             </div>
@@ -76,8 +79,11 @@
 
         </div>
 
+
+
+        <Remark :mid="mid"/>
     </div>
-    
+
 
 </template>
 <script>
@@ -100,15 +106,19 @@ export default {
             currentIndex: 0,
             muted: false,
             musicData: [],//音乐数据
+            mid:0
         }
     },
     components: {
+        Remark
         // slider
     },
     created() {
     },
     mounted() {
         this.audioPlayer()
+        this.mid=this.$route.params.id
+        console.log(this.mid,"开始");
     },
     beforeRouteLeave() {
         this.sound.stop()
@@ -235,6 +245,7 @@ export default {
 </script>
 
 <style  lang="less" scoped>
+
 #player {
     width: 100%;
     height: 100%;
@@ -346,7 +357,7 @@ export default {
     // width: 35%;
     // flex: 1;
     // border: 1px solid;
-    min-width: 10rem;
+    min-width: 20rem;
     margin-top: 2rem;
 }
 

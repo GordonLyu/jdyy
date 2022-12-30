@@ -88,7 +88,7 @@ const router = createRouter({
          }
         },
         {
-          path:'musicPlay',
+          path:'musicPlay/:id',
           name:'musicPlay',
           component:musicPlay,
           meta:{
@@ -130,7 +130,7 @@ const router = createRouter({
 
 
 // ↓白名单
-const whiteList = ['/login','/musicFrout']
+const whiteList = ['/login','/musicFrout','/register']
 
 // ↓全局前置守卫
 router.beforeEach(async (to) => {
@@ -164,6 +164,12 @@ router.beforeEach(async (to) => {
         ElMessage.error("权限不足！！！")
         return { name: 'musicFrout', query: { redirect: `${to.path}` } }
       }
+    }
+  }else{
+    if (userInfoStore.username!=='未登录'&&(whiteList.indexOf(to.path) === 0||whiteList.indexOf(to.path) === 2)) {
+      // ↓查询成功保存用户信息且跳转到目标页
+      ElMessage.error("请勿重复操作！！！")
+      return { name: 'musicFrout', query: { redirect: `${to.path}` } }
     }
   }
 })

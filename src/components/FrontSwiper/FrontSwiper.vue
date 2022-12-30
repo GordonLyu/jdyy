@@ -10,9 +10,9 @@
 			:scrollbar="{ draggable: true }"
 		>
 	<!-- loop可循环轮播，autoplay可自动播放 -->
-	<swiper-slide><img src="@/assets/image/login-background.jpg" alt=""></swiper-slide>
-			<swiper-slide><img src="@/assets/image/login-background.jpg" alt=""></swiper-slide>
-			<swiper-slide><img src="@/assets/image/login-background.jpg" alt=""></swiper-slide>
+			<swiper-slide><img src="https://imgessl.kugou.com/commendpic/20221226/20221226220604107196.jpg" alt=""></swiper-slide>
+			<swiper-slide><img src="https://imgessl.kugou.com/commendpic/20221226/20221226220506260097.jpg" alt=""></swiper-slide>
+			<swiper-slide><img src="https://imgessl.kugou.com/commendpic/20221226/20221226220416949308.jpg" alt=""></swiper-slide>
 		</swiper>
 
 	<div class="top"></div>

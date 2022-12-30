@@ -50,7 +50,7 @@
                 <!-- 密码 -->
                 <el-form-item prop="password">
                     <el-input v-model="ruleForm.password" class="w-50 m-2" size="large" type="password"
-                        placeholder="密码">
+                        placeholder="密码" show-password>
                         <template #prefix>
                             <el-icon class="el-input__icon">
                                 <Lock />
@@ -62,7 +62,7 @@
                 <!-- 确认密码 -->
                 <el-form-item prop="ensurePassword">
                     <el-input v-model="ruleForm.ensurePassword" class="w-50 m-2" size="large" type="password"
-                        placeholder="确认密码">
+                        placeholder="确认密码" show-password>
                         <template #prefix>
                             <el-icon class="el-input__icon">
                                 <Lock />
