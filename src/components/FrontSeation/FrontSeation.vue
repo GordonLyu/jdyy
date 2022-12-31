@@ -26,7 +26,8 @@
                                 :key="item.lid"
                             >
                                 <strong class="fa-user-plus" style="font-weight: lighter;"><span>&nbsp;{{ item.creator }}</span></strong>
-                                <img :src="`http://localhost:8080/${item.cover}`" @click='toMusicListUrl("musicList",item,item.lid)'>
+                                <img :src="`http://localhost:8080/${item.cover}`" @click='toMusicListUrl("musicList",item,item.lid)' v-if="item.cover!=null">
+                                <div v-else style="width:200px;height:200px; display: flex; justify-content: center;align-items: center; color: white;font-size: 20px;font-weight: 900;" >我是无图祖</div>
                                 <p style="display: flex; justify-content: space-between;">
                                     <icon class="fa-music">&nbsp; {{ item.listName }}</icon>
 
@@ -691,7 +692,7 @@ h1:nth-of-type(2){
 
 /* 小歌单 */
 #seation div .musicSheetList .box div:nth-of-type(n+2) {
-    width: auto;
+    min-width: 200px;
     height: 14rem;
     /* border: 1px solid; */
     box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px,

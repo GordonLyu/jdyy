@@ -27,9 +27,8 @@ import { ElMessage } from "element-plus";
 import { reactive, ref } from "vue";
 import { useUserInfoStore } from '@/stores/user-info'
 import { inject } from 'vue'
-
-
-const reload:any = inject('inject');
+//注入刷新事件,这里括号中的参数要对应上前面provide中的第一个参数
+const reload: any = inject('reload')
 
 
 
