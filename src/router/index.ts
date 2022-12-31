@@ -154,6 +154,14 @@ router.beforeEach(async (to) => {
           return { name: 'adminLogin', query: { redirect: `${to.path}` } }
       }
     }else{
+      let userClear={
+        uid: '',
+        username: '未登录',
+        password: '',
+        role:'',
+        token:''
+      }
+      userInfoStore.setAll(userClear);
       ElMessage.error("^_^登录后即享权益！")
       return { name: 'adminLogin', query: { redirect: `${to.path}` } }
     }

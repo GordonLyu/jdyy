@@ -76,7 +76,7 @@
                         <span>{{ item.musicName }}</span><span>&nbsp;- {{ item.author }}</span>
                     </div>
                     <div class="clickNum">
-                        点击数：<span>{{ item.clickNumber }}</span>
+                        点击数：<span>{{ item.clickNumber || 0 }}</span>
                     </div>
                 </div>
 
@@ -106,7 +106,7 @@
                                 <span>{{ item.musicName }}</span><span>&nbsp;- {{ item.author }}</span>
                             </div>
                             <div class="clickNum">
-                                点击数：<span>{{ item.clickNumber }}</span>
+                                点击数：<span>{{ item.clickNumber || 0 }}</span>
                             </div>
                         </div>
 
@@ -129,12 +129,17 @@
 <script setup lang="ts">
 import router from '@/router/index'
 import Pagination from "@/components/Pagination.vue";
-import { ref, reactive, onBeforeMount, onMounted } from "vue";
+import { ref, reactive, onBeforeMount, onMounted,watchEffect } from "vue";
 import {Refresh,Delete} from '@element-plus/icons-vue'
 import request from "@/utils/requests";
 import { ElMessage } from "element-plus";
 import { useUserInfoStore } from '@/stores/user-info'
 import emitter from '@/utils/bus/bus'
+import { inject } from 'vue'
+//注入刷新事件,这里括号中的参数要对应上前面provide中的第一个参数
+const reload: any = inject('reload')
+
+
 
 const username = useUserInfoStore().username//当前的登录状态
 
@@ -170,10 +175,11 @@ const confirmEvent= (lid:any)=>{
         message: res.message,
         grouping: true,
       });
-      location.reload()
+    //   location.reload()
       //给父组件传值
     // emit('musicListDelete',updateMusicList)
-    getListPage()
+    // getListPage()
+    reload();//刷新
     console.log("删除成功！");
     }
   });
@@ -286,11 +292,15 @@ const ClickRefresh=()=>{
 let firstItem: any = [];
 firstItem.push(props.listMusic[0]);
 
-let rankData:any[]=[];
-rankData.push(...props.dataList)
+// let rankData:any[]=[];
+// rankData.push(...props.dataList)
 
-//榜单数据取点击数前五
-const rankItem:any[]=rankData.sort((a,b)=>b.clickNumber-a.clickNumber).splice(0,5);
+const rankItem:any=ref()
+watchEffect(()=>{
+   //榜单数据取点击数前五
+    rankItem.value=props.dataList.sort((a,b)=>b.clickNumber-a.clickNumber).splice(0,5); 
+})
+
 
 
 

@@ -142,10 +142,6 @@ const submitForm = (formEl: FormInstance | undefined) => {
             Cookies.remove('LOCAL_KEY')
             }
 
-
-
-
-        
             //记住密码功能end
 
            doLogin(JSON.stringify(ruleForm)).then((res:any)=>{
