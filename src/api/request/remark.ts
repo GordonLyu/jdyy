@@ -6,30 +6,29 @@ export const getAll = () => {
 };
 
 //通过音乐ID找评论
-export const getByMusic = (mid: number) => {
+export const getByMusic = (mid: any) => {
   return request.get("remark/getByMusic", {
     params: { mid },
   });
 };
 
 //通过用户ID查询评论
-export const getByUser = (uid: number) => {
+export const getByUser = (uid: any) => {
   return request.get("remark/getByUser", {
     params: { uid },
   });
 };
 
 //添加评论
-export const add = (mid: number, uid: number, content: string) => {
-  const data = { mid, uid, content };
+export const add = (data:any) => {
   return request.put("remark/add", data);
 };
 
 //删除评论
-const deleteRemark = (id: number) => {
+export const deleteRemark = (id: number) => {
   return request.delete("remark/remove", {
     params: { id },
   });
 };
 
-export { deleteRemark as delete };
+// export { deleteRemark as delete };

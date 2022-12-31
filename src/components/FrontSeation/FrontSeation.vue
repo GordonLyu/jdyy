@@ -26,7 +26,8 @@
                                 :key="item.lid"
                             >
                                 <strong class="fa-user-plus" style="font-weight: lighter;"><span>&nbsp;{{ item.creator }}</span></strong>
-                                <img :src="`http://localhost:8080/${item.cover}`" @click='toMusicListUrl("musicList",item,item.lid)'>
+                                <img :src="`http://localhost:8080/${item.cover}`" @click='toMusicListUrl("musicList",item,item.lid)' v-if="item.cover!=null">
+                                <div v-else style="width:200px;height:200px; display: flex; justify-content: center;align-items: center; color: white;font-size: 20px;font-weight: 900;" >我是无图祖</div>
                                 <p style="display: flex; justify-content: space-between;">
                                     <icon class="fa-music">&nbsp; {{ item.listName }}</icon>
 
@@ -76,7 +77,7 @@
                         <span>{{ item.musicName }}</span><span>&nbsp;- {{ item.author }}</span>
                     </div>
                     <div class="clickNum">
-                        点击数：<span>{{ item.clickNumber }}</span>
+                        点击数：<span>{{ item.clickNumber || 0 }}</span>
                     </div>
                 </div>
 
@@ -106,7 +107,7 @@
                                 <span>{{ item.musicName }}</span><span>&nbsp;- {{ item.author }}</span>
                             </div>
                             <div class="clickNum">
-                                点击数：<span>{{ item.clickNumber }}</span>
+                                点击数：<span>{{ item.clickNumber || 0 }}</span>
                             </div>
                         </div>
 
@@ -129,12 +130,17 @@
 <script setup lang="ts">
 import router from '@/router/index'
 import Pagination from "@/components/Pagination.vue";
-import { ref, reactive, onBeforeMount, onMounted } from "vue";
+import { ref, reactive, onBeforeMount, onMounted,watchEffect } from "vue";
 import {Refresh,Delete} from '@element-plus/icons-vue'
 import request from "@/utils/requests";
 import { ElMessage } from "element-plus";
 import { useUserInfoStore } from '@/stores/user-info'
 import emitter from '@/utils/bus/bus'
+import { inject } from 'vue'
+//注入刷新事件,这里括号中的参数要对应上前面provide中的第一个参数
+const reload: any = inject('reload')
+
+
 
 const username = useUserInfoStore().username//当前的登录状态
 
@@ -170,10 +176,11 @@ const confirmEvent= (lid:any)=>{
         message: res.message,
         grouping: true,
       });
-      location.reload()
+    //   location.reload()
       //给父组件传值
     // emit('musicListDelete',updateMusicList)
-    getListPage()
+    // getListPage()
+    reload();//刷新
     console.log("删除成功！");
     }
   });
@@ -286,11 +293,15 @@ const ClickRefresh=()=>{
 let firstItem: any = [];
 firstItem.push(props.listMusic[0]);
 
-let rankData:any[]=[];
-rankData.push(...props.dataList)
+// let rankData:any[]=[];
+// rankData.push(...props.dataList)
 
-//榜单数据取点击数前五
-const rankItem:any[]=rankData.sort((a,b)=>b.clickNumber-a.clickNumber).splice(0,5);
+const rankItem:any=ref()
+watchEffect(()=>{
+   //榜单数据取点击数前五
+    rankItem.value=props.dataList.sort((a,b)=>b.clickNumber-a.clickNumber).splice(0,5); 
+})
+
 
 
 
@@ -681,7 +692,7 @@ h1:nth-of-type(2){
 
 /* 小歌单 */
 #seation div .musicSheetList .box div:nth-of-type(n+2) {
-    width: auto;
+    min-width: 200px;
     height: 14rem;
     /* border: 1px solid; */
     box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px,

@@ -26,6 +26,10 @@ import Upload from "@/components/Upload";
 import { ElMessage } from "element-plus";
 import { reactive, ref } from "vue";
 import { useUserInfoStore } from '@/stores/user-info'
+import { inject } from 'vue'
+//注入刷新事件,这里括号中的参数要对应上前面provide中的第一个参数
+const reload: any = inject('reload')
+
 
 
 //接受父组件froutHeader发送给frontSeation的信息
@@ -86,7 +90,8 @@ const submit =() => {
         message: res.message,
         grouping: true,
       });
-      props.sendMitt();//父组件froutHeader发送给frontSeation的信息
+      reload();
+     // props.sendMitt();//父组件froutHeader发送给frontSeation的信息
     } else {
       ElMessage.warning({
         message: res.message,
@@ -95,6 +100,8 @@ const submit =() => {
     }
   });
 };
+
+
 
 const reset = () => {
   formLabelAlign.listName = "";

@@ -6,7 +6,7 @@ const modulesRoutes = import.meta.glob('/src/views/*/*.vue')
 // 定义用户信息Store
 export const useUserInfoStore = defineStore('user-info', {
   state: () => ({
-    uid: 0,
+    uid: '',
     username: '未登录',
     password: '',
     role:'',
@@ -16,7 +16,7 @@ export const useUserInfoStore = defineStore('user-info', {
 
     key: 'article', //缓存key
 
-    storage: window.sessionStorage, //缓存方式
+    storage: window.localStorage, //缓存方式
 
     // 部分持久化状态的点符号路径数组，默认持久化所有数据
 

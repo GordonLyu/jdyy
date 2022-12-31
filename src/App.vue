@@ -1,10 +1,36 @@
-<script setup lang="ts">
-import { RouterView } from 'vue-router'
-</script>
+
 
 <template>
-  <RouterView/>
+  <RouterView v-if="state.showRouter"/>
+  
 </template>
+
+<script lang="ts">
+import { RouterView } from 'vue-router'
+
+import { defineComponent, nextTick, provide, reactive} from 'vue'
+
+  export default defineComponent({
+  setup() {
+    const state = reactive({
+      showRouter: true,
+    })
+    function reload() {
+      state.showRouter = false
+      nextTick(() => {
+        state.showRouter = true
+      })
+    }
+    provide('reload', reload)
+    return {
+      state,
+    }
+  },
+})
+
+
+
+</script>
 
 <style>
 @import url(https://fonts.googleapis.com/css?family=Kanit:900);

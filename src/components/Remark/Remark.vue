@@ -63,6 +63,7 @@
           <icon class="fa-thumbs-up"></icon>
           <span>{{item.goodNum}}</span>
           <icon class="fa-trash" @click="removeRemark(item.id)" v-if="item.username==user"></icon>
+          <icon class="fa-trash" v-else style="opacity: 0; cursor: default;"></icon>
         </div>
 
       </div>
@@ -86,11 +87,12 @@
   import { ref,reactive } from 'vue'
   import { ElButton, ElDrawer,ElMessage } from 'element-plus'
   import { CircleCloseFilled } from '@element-plus/icons-vue'
-  import request from "@/utils/requests";
+  // import request from "@/utils/requests";
   import { useUserInfoStore } from '@/stores/user-info'
 
   import type { FormInstance, FormRules } from 'element-plus'
   import { useRoute } from "vue-router"
+  import { getByMusic,deleteRemark,add } from '@/api/request/remark';
 
   //获取当前音乐的id
   const route = useRoute()
@@ -153,11 +155,7 @@
 
 //添加评论
 function addRemark(data:any){
-  request({
-      method: "put",
-      url: "remark/add",
-      data:data
-  }).then((res:any) => {
+  add(data).then((res:any) => {
     if (res.code == 200) {
       ElMessage.success({
         message: res.message,
@@ -173,13 +171,7 @@ function addRemark(data:any){
 }
 //删除评论
 function removeRemark(id:any){
-  request({
-      method: "delete",
-      url: "remark/remove",
-      params: {
-        id:id
-      },
-  }).then((res:any) => {
+  deleteRemark(id).then((res:any) => {
     if (res.code == 200) {
       ElMessage.success({
         message: res.message,
@@ -196,46 +188,13 @@ function removeRemark(id:any){
 
   //根据音乐id获取评论
 async function getRemarkByMusicId(){
-   await request({
-      method: "get",
-      url: "remark/getByMusic",
-      params: {
-      mid:route.params.id
-    },
-  }).then((res:any) => {
+   await getByMusic(route.params.id).then((res:any) => {
     if (res.code == 200) {
-      // ElMessage.success({
-      //   message: res.message,
-      //   grouping: true,
-      // });
       remarkData.value=res.data
     console.log("查询成功！",remarkData.value);
     }
   });
   }
-
-    //根据音乐id获取用户名
-  //   async function getUserNameByUId(uid:any){
-  //     await request({
-  //     method: "get",
-  //     url: "user/getUserById",
-  //     params: {
-  //     uid:uid
-  //   },
-  // }).then((res:any) => {
-    
-  //   if (res.code == 200) {
-  //     ElMessage.success({
-  //       message: res.message,
-  //       grouping: true,
-  //     });
-  //     console.log("查询成功！",res.data[0].username);
-      
-  //     return res.data[0].username
-  //   }
-    
-  // });
-  // }
 
  
   
@@ -321,6 +280,7 @@ async function getRemarkByMusicId(){
       .msg span:nth-of-type(1){
         margin-right: 1rem;
       }
+
       /* 点赞数 */
       .remarkAll>div>.clickNum{
         display: flex;

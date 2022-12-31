@@ -60,6 +60,7 @@ import { removeToken } from '@/utils/token/index'
 import emitter from '@/utils/bus/bus'
 
 
+
 //发送信息给兄弟frontSeation组件
 const sendMitt = () => {
     emitter.emit('addEvent', true);

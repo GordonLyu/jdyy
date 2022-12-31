@@ -13,16 +13,16 @@
 <script setup lang="ts">
 import {defineAsyncComponent} from "vue";
 
-// import FroutHeader from "@/components/FrontHeader/FroutHeader.vue";
-// import FroutSwiper from "@/components/FrontSwiper/FrontSwiper.vue";
-// import FroutSeation from "@/components/FrontSeation/FrontSeation.vue";
-import { ref,reactive } from 'vue';
+import FroutHeader from "@/components/FrontHeader/FroutHeader.vue";
+import FroutSwiper from "@/components/FrontSwiper/FrontSwiper.vue";
+import FroutSeation from "@/components/FrontSeation/FrontSeation.vue";
+import { ref,reactive,onMounted } from 'vue';
 import { RouterView } from "vue-router";
 import request from "@/utils/requests";
 import { toRaw } from '@vue/reactivity';
-const FroutHeader = defineAsyncComponent(() => import('@/components/FrontHeader/FroutHeader.vue'))
-const FroutSwiper = defineAsyncComponent(() => import('@/components/FrontSwiper/FrontSwiper.vue'))
-const FroutSeation = defineAsyncComponent(() => import('@/components/FrontSeation/FrontSeation.vue'))
+// const FroutHeader = defineAsyncComponent(() => import('@/components/FrontHeader/FroutHeader.vue'))
+// const FroutSwiper = defineAsyncComponent(() => import('@/components/FrontSwiper/FrontSwiper.vue'))
+// const FroutSeation = defineAsyncComponent(() => import('@/components/FrontSeation/FrontSeation.vue'))
 
 //删除歌单后的操作
 // function musicListDeleteAfter(flag:any){
@@ -46,10 +46,19 @@ let ListData:any=ref([]);
 let musicList:any=ref([]);
 
 
+
 //获取所有歌单
 getAllList();
-//获取所有音乐
+
+onMounted(()=>{
+    //获取所有音乐
 getAllMusic();
+})
+
+
+
+
+
 
 async function getAllMusic(){ 
 await request({
